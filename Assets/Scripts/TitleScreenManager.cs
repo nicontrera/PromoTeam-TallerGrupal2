@@ -14,5 +14,10 @@ namespace NC
         {
             StartCoroutine(WorldSaveGameManager.instance.LoadNewGame());
         }
+
+        public void StartNewGameAsClient()
+        {
+            NetworkManager.Singleton.StartClient();
+        }
     }
 }
