@@ -9,9 +9,9 @@ namespace NC
         // THINK ABOUT GOALS IN STEPS
         PlayerControls playerControls;
         [SerializeField] Vector2 movementInput;
-        [SerializeField] float horizontalInput;
-        [SerializeField] float verticalInput;
-        [SerializeField] float moveAmount;
+        public float horizontalInput;
+        public float verticalInput;
+        public float moveAmount;
 
         void Awake()
         {
@@ -67,12 +67,26 @@ namespace NC
             // IF WE DESTROY THIS OBJECT, UNSUBSCRIBE FROM THIS EVENT
             SceneManager.activeSceneChanged -= OnSceneChange;
         }
+        void Update()
+        {
+            HandleInputMovement();
+        }
         private void HandleInputMovement()
         {
             verticalInput = movementInput.y;
             horizontalInput = movementInput.x;
 
             moveAmount = Mathf.Clamp01(Mathf.Abs(verticalInput) + Mathf.Abs(horizontalInput));
+
+            // WE CLAMP THE VALUES, SO THEY  ARE 0.5 OR 1 (OPTIONAL)
+            if (moveAmount <= 0.5 && moveAmount > 0)
+            {
+                moveAmount = 0.5f;
+            }
+            else if(moveAmount > 0.5 && moveAmount <= 1)
+            {
+                moveAmount = 1;
+            }
         }
     }
     
