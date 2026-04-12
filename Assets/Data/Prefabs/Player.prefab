@@ -61,7 +61,10 @@ PrefabInstance:
       addedObject: {fileID: 5994394924448572730}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2980481087582883447}
+      addedObject: {fileID: 9185080855552189446}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6863925910083671088}
   m_SourcePrefab: {fileID: 100100000, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
 --- !u!1 &5037326017905507323 stripped
 GameObject:
@@ -80,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 951940352
+  GlobalObjectIdHash: 4187572493
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -93,7 +96,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &2980481087582883447
+--- !u!114 &9185080855552189446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,6 +105,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5037326017905507323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 836631dc770c5cc458be338d9b316d4d, type: 3}
+  m_Script: {fileID: 11500000, guid: fdf23b84fb7ad1d4fadf55b162d328e1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerManager
+--- !u!114 &6863925910083671088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5037326017905507323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a57a8e8e0dc57a4b92575dbb517d38c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerLocomotionManager
