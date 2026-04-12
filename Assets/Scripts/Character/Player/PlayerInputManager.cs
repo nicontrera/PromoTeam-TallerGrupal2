@@ -67,6 +67,21 @@ namespace NC
             // IF WE DESTROY THIS OBJECT, UNSUBSCRIBE FROM THIS EVENT
             SceneManager.activeSceneChanged -= OnSceneChange;
         }
+
+        void OnApplicationFocus(bool focus)
+        {
+            if (enabled)
+            {
+                if (focus)
+                {
+                    playerControls.Enable();
+                }
+                else
+                {
+                    playerControls.Disable();
+                }
+            }
+        }
         void Update()
         {
             HandleInputMovement();

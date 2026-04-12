@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb76554c81ed26a4295d46120dc29334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  cameraObject: {fileID: 1834278380359438048}
 --- !u!1 &5833178703442440787
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,7 +138,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5833178703442440787}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &723827125329241216
 MonoBehaviour:
   m_ObjectHideFlags: 0
