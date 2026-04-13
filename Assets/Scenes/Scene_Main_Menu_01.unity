@@ -119,11 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &117560835 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2696031940657864985, guid: b63457a928bad1340974b089784bffc4, type: 3}
-  m_PrefabInstance: {fileID: 1438821287327622427}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &268246645
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,6 +1581,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4061249737728304410, guid: eaec7759c9194b2498fbaac6f1873fc8, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 7946168519586379750, guid: 346a86243b1b1b048adbd06f673398a0, type: 3}
     - target: {fileID: 5769987989253196580, guid: eaec7759c9194b2498fbaac6f1873fc8, type: 3}
       propertyPath: m_Name
       value: Player Input Manager
@@ -1647,10 +1646,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Camera (Left & Right)
       objectReference: {fileID: 0}
+    - target: {fileID: 2696031940657864985, guid: b63457a928bad1340974b089784bffc4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7036773841762139413, guid: b63457a928bad1340974b089784bffc4, type: 3}
-      propertyPath: cameraPivotTransform
-      value: 
-      objectReference: {fileID: 117560835}
+      propertyPath: collideWithLayers.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8080056186068870140, guid: b63457a928bad1340974b089784bffc4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1764,7 +1767,7 @@ PrefabInstance:
     - target: {fileID: 772786691551348260, guid: e1091e74459d30045be29d8e2b323e52, type: 3}
       propertyPath: NetworkConfig.PlayerPrefab
       value: 
-      objectReference: {fileID: 3505971833144085405, guid: 346a86243b1b1b048adbd06f673398a0, type: 3}
+      objectReference: {fileID: 5185499262236069758, guid: 75a0e447ad8d4114fae164c0be56fead, type: 3}
     - target: {fileID: 5664863780836820432, guid: e1091e74459d30045be29d8e2b323e52, type: 3}
       propertyPath: m_Name
       value: World Network Manager

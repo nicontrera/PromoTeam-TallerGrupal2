@@ -6,6 +6,7 @@ namespace NC
     public class PlayerInputManager : MonoBehaviour
     {
         public static PlayerInputManager instance;
+        public PlayerManager player;
         // THINK ABOUT GOALS IN STEPS
         PlayerControls playerControls;
 
@@ -92,10 +93,10 @@ namespace NC
         }
         void Update()
         {
-            HandlePlayerInputMovement();
+            HandlePlayerMovementInput();
             HandleCameraMovementInput();
         }
-        private void HandlePlayerInputMovement()
+        private void HandlePlayerMovementInput()
         {
             verticalInput = movementInput.y;
             horizontalInput = movementInput.x;
@@ -111,6 +112,11 @@ namespace NC
             {
                 moveAmount = 1;
             }
+
+            if (player == null)
+                return;
+
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
         }
 
         private void HandleCameraMovementInput()

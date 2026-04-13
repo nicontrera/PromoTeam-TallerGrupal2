@@ -1,3 +1,4 @@
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace NC
@@ -22,6 +23,29 @@ namespace NC
 
             playerManager = GetComponent<PlayerManager>();
         }
+
+        // protected override void Update()
+        // {
+        //     base.Update();
+
+        //     if (playerManager.IsOwner)
+        //     {
+        //         playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
+        //         playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+        //         playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
+        //     }
+        //     else
+        //     {
+        //         verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
+        //         horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
+        //         moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
+
+        //         // IF NOT LOCKED ON, PASS MOVE AMOUNT
+        //         playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+
+        //         // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
+        //     }
+        // }
         public void HandleAllMovement()
         {
             // GROUNDED MOVEMENT
@@ -30,17 +54,18 @@ namespace NC
             // AERIAL MOVEMENT
         }
 
-        private void GetVerticalAndHorizontalInputs()
+        private void GetMovementValues()
         {
             verticalMovement = PlayerInputManager.instance.verticalInput;
             horizontalMovement = PlayerInputManager.instance.horizontalInput;
+            // moveAmount = PlayerInputManager.instance.moveAmount;
 
             // CLAMP THE MOVEMENTS
         }
 
         private void HandleGroundedMovement()
         {
-            GetVerticalAndHorizontalInputs();
+            GetMovementValues();
 
             // OUR MOVEMENT DIRECTION IS BASED ON OUR CAMERA PERSPECTIVE AND OUR MOVEMENT INPUTS
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;

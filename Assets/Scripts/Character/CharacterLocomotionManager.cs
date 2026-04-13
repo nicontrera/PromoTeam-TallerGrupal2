@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NC
@@ -5,6 +6,11 @@ namespace NC
     public class CharacterLocomotionManager : MonoBehaviour
     {
         protected virtual void Awake()
+        {
+            
+        }
+
+        protected virtual void Update()
         {
             
         }
