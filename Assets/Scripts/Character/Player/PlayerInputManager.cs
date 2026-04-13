@@ -8,10 +8,17 @@ namespace NC
         public static PlayerInputManager instance;
         // THINK ABOUT GOALS IN STEPS
         PlayerControls playerControls;
+
+        [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] Vector2 movementInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
+
+        [Header("CAMERA MOVEMENT INPUT")]
+        [SerializeField] Vector2 cameraInput;
+        public float cameraHorizontalInput;
+        public float cameraVerticalInput;
 
         void Awake()
         {
@@ -57,6 +64,7 @@ namespace NC
                 playerControls = new PlayerControls();
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
+                playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
             }
 
             playerControls.Enable();
@@ -84,9 +92,10 @@ namespace NC
         }
         void Update()
         {
-            HandleInputMovement();
+            HandlePlayerInputMovement();
+            HandleCameraMovementInput();
         }
-        private void HandleInputMovement()
+        private void HandlePlayerInputMovement()
         {
             verticalInput = movementInput.y;
             horizontalInput = movementInput.x;
@@ -103,6 +112,12 @@ namespace NC
                 moveAmount = 1;
             }
         }
+
+        private void HandleCameraMovementInput()
+        {
+            cameraVerticalInput = cameraInput.y;
+            cameraHorizontalInput = cameraInput.x;
+
+        }
     }
-    
 }

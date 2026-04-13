@@ -1647,6 +1647,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Camera (Left & Right)
       objectReference: {fileID: 0}
+    - target: {fileID: 2696031940657864985, guid: b63457a928bad1340974b089784bffc4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 7036773841762139413, guid: b63457a928bad1340974b089784bffc4, type: 3}
       propertyPath: cameraPivotTransform
       value: 
@@ -1690,6 +1694,10 @@ PrefabInstance:
     - target: {fileID: 8080056186068870140, guid: b63457a928bad1340974b089784bffc4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8308613720152614782, guid: b63457a928bad1340974b089784bffc4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
