@@ -27,36 +27,36 @@ namespace NC
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 
-        protected override void Update()
-        {
-            base.Update();
+        // protected override void Update()
+        // {
+        //     base.Update();
 
-            if (playerManager.IsOwner)
-            {
-                // playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
-                // playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
-                // playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
+        //     if (playerManager.IsOwner)
+        //     {
+        //         // playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
+        //         // playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+        //         // playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
 
-                characterNetworkManager.verticalMovement.Value = verticalMovement;
-                characterNetworkManager.horizontalMovement.Value = horizontalMovement;
-                characterNetworkManager.moveAmount.Value = moveAmount;
-            }
-            else
-            {
-                // verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
-                // horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
-                // moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
+        //         characterNetworkManager.verticalMovement.Value = verticalMovement;
+        //         characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+        //         characterNetworkManager.moveAmount.Value = moveAmount;
+        //     }
+        //     else
+        //     {
+        //         // verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
+        //         // horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
+        //         // moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
 
-                verticalMovement = characterNetworkManager.verticalMovement.Value;
-                horizontalMovement = characterNetworkManager.moveAmount.Value;
-                moveAmount = characterNetworkManager.moveAmount.Value;
+        //         verticalMovement = characterNetworkManager.verticalMovement.Value;
+        //         horizontalMovement = characterNetworkManager.moveAmount.Value;
+        //         moveAmount = characterNetworkManager.moveAmount.Value;
 
-                // IF NOT LOCKED ON, PASS MOVE AMOUNT
-                playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+        //         // IF NOT LOCKED ON, PASS MOVE AMOUNT
+        //         playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
 
-                // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
-            }
-        }
+        //         // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
+        //     }
+        // }
         public void HandleAllMovement()
         {
             // GROUNDED MOVEMENT
@@ -69,7 +69,7 @@ namespace NC
         {
             verticalMovement = PlayerInputManager.instance.verticalInput;
             horizontalMovement = PlayerInputManager.instance.horizontalInput;
-            // moveAmount = PlayerInputManager.instance.moveAmount;
+            moveAmount = PlayerInputManager.instance.moveAmount;
 
             // CLAMP THE MOVEMENTS
         }

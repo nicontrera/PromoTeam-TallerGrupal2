@@ -115,11 +115,6 @@ namespace NC
 
             if (player == null)
                 return;
-            if (player.playerAnimatorManager == null)
-            {
-                Debug.Log("no hay este Objeto");
-            }
-
 
             player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
         }
