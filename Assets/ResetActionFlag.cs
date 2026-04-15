@@ -18,6 +18,7 @@ namespace NC
             character.canMove = true;
             // character.animator.applyRootMotion = false; // THIS WAY IS OPTIONAL
             // character.applyRootMotion = false;
+            character.isSprinting = false;
         }
 
         // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

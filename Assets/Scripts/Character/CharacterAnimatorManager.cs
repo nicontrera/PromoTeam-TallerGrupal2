@@ -13,10 +13,19 @@ namespace NC
         {
             character = GetComponent<CharacterManager>();
         }
-        public void UpdateAnimatorMovementParameters(float horizontalValue, float verticalValue)
+        public void UpdateAnimatorMovementParameters(float horizontalValue, float verticalValue, bool isSprinting)
         {
-            character.animator.SetFloat("Horizontal", horizontalValue, 0.1f, Time.deltaTime);
-            character.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
+            float horizontal = horizontalValue;
+            float vertical = verticalValue;
+
+            // FIX HUMANOID ANIMATOR TO HANDLE SPRINTING ANIMATION AND THEN ENABLE THIS LINES OF CODE
+            if (isSprinting)
+            {
+                vertical = 2;
+            }
+
+            character.animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
+            character.animator.SetFloat("Vertical", vertical, 0.1f, Time.deltaTime);
         }
 
         public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = true)

@@ -1,3 +1,4 @@
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace NC
@@ -17,7 +18,8 @@ namespace NC
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2f;
-        [SerializeField] float runningSpeed = 5f;
+        [SerializeField] float runningSpeed = 4f;
+        [SerializeField] float sprintingSpeed = 40f;
         [SerializeField] float rotationSpeed = 15f;
 
         [Header("Dodge")]
@@ -31,36 +33,6 @@ namespace NC
             characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 
-        // protected override void Update()
-        // {
-        //     base.Update();
-
-        //     if (playerManager.IsOwner)
-        //     {
-        //         // playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
-        //         // playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
-        //         // playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
-
-        //         characterNetworkManager.verticalMovement.Value = verticalMovement;
-        //         characterNetworkManager.horizontalMovement.Value = horizontalMovement;
-        //         characterNetworkManager.moveAmount.Value = moveAmount;
-        //     }
-        //     else
-        //     {
-        //         // verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
-        //         // horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
-        //         // moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
-
-        //         verticalMovement = characterNetworkManager.verticalMovement.Value;
-        //         horizontalMovement = characterNetworkManager.moveAmount.Value;
-        //         moveAmount = characterNetworkManager.moveAmount.Value;
-
-        //         // IF NOT LOCKED ON, PASS MOVE AMOUNT
-        //         playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
-
-        //         // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
-        //     }
-        // }
         public void HandleAllMovement()
         {
             // GROUNDED MOVEMENT
@@ -90,16 +62,24 @@ namespace NC
             moveDirection.Normalize();
             moveDirection.y = 0;
 
-            if (PlayerInputManager.instance.moveAmount > 0.5f)
+            if (playerManager.isSprinting)
             {
-                // MOVE AT RUNNING SPEED
-                playerManager.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+                playerManager.characterController.Move(moveDirection * sprintingSpeed * Time.deltaTime);
             }
-            else if(PlayerInputManager.instance.moveAmount <= 0.5f)
+            else
             {
-                // MOVE AT WALKING SPEED
-                playerManager.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+                if (PlayerInputManager.instance.moveAmount > 0.5f)
+                {
+                    // MOVE AT RUNNING SPEED
+                    playerManager.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+                }
+                else if(PlayerInputManager.instance.moveAmount <= 0.5f)
+                {
+                    // MOVE AT WALKING SPEED
+                    playerManager.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+                }
             }
+
         }
         private void HandleRotation()
         {
@@ -145,6 +125,28 @@ namespace NC
             {
                 // PERFORM A BACKSTEP ANIMATION
                 playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+            }
+        }
+
+        public void HandleSprinting()
+        {
+            if (playerManager.isPerformingAction)
+            {
+                // SET SPRINTING TO FALSE
+                playerManager.isSprinting = false;
+            }
+
+            // IF WE ARE OUT OF STAMINA, SET SPRINTING TO FALSE
+
+            // IF WE ARE MOVING SPRINTING IS TRUE
+            if (moveAmount >= 0.5 && !playerManager.isPerformingAction)
+            {
+                playerManager.isSprinting = true;           
+            }
+            // IF WE ARE STATIONARY OR MOVING SLOWLY, SPRINTING IS FALSE
+            else
+            {
+                playerManager.isSprinting = false;           
             }
         }
     }

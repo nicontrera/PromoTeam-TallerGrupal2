@@ -23,6 +23,7 @@ namespace NC
 
         [Header("PLAYER ACTIONS INPUT")]
         [SerializeField] bool dodgeInput;
+        [SerializeField] bool sprintInput;
 
 
         void Awake()
@@ -71,6 +72,11 @@ namespace NC
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+
+                // HOLDING THE INPUT SETS THE BOOL TO TRUE
+                playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
+                // RELEASING THE INPUT SETS THE BOOL TO FALSE
+                playerControls.PlayerActions.Sprint.canceled += i => sprintInput = false;
             }
 
             playerControls.Enable();
@@ -106,6 +112,7 @@ namespace NC
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
             HandleDodge();
+            HandleSprinting();
         }
 
         // MOVEMENT
@@ -129,7 +136,7 @@ namespace NC
             if (player == null)
                 return;
 
-            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+            player.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount, player.isSprinting);
         }
 
         private void HandleCameraMovementInput()
@@ -148,6 +155,20 @@ namespace NC
                 // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
                 // PERFORM A DODGE
                 player.playerLocomotionManager.AttempToPerformDodge();
+            }
+        }
+
+        private void HandleSprinting()
+        {
+            if (sprintInput)
+            {
+                // MAKE PLAYER SPRINTS
+                // player.isSprinting = true;
+                player.playerLocomotionManager.HandleSprinting();
+            }
+            else
+            {
+                player.isSprinting = false;
             }
         }
     }
