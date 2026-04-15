@@ -10,16 +10,20 @@ namespace NC
         // THINK ABOUT GOALS IN STEPS
         PlayerControls playerControls;
 
+        [Header("CAMERA MOVEMENT INPUT")]
+        [SerializeField] Vector2 cameraInput;
+        public float cameraHorizontalInput;
+        public float cameraVerticalInput;
+
         [Header("PLAYER MOVEMENT INPUT")]
         [SerializeField] Vector2 movementInput;
         public float horizontalInput;
         public float verticalInput;
         public float moveAmount;
 
-        [Header("CAMERA MOVEMENT INPUT")]
-        [SerializeField] Vector2 cameraInput;
-        public float cameraHorizontalInput;
-        public float cameraVerticalInput;
+        [Header("PLAYER ACTIONS INPUT")]
+        [SerializeField] bool dodgeInput;
+
 
         void Awake()
         {
@@ -66,6 +70,7 @@ namespace NC
 
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
+                playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
             }
 
             playerControls.Enable();
@@ -93,9 +98,17 @@ namespace NC
         }
         void Update()
         {
+            HandleAllInputs();
+        }
+
+        private void HandleAllInputs()
+        {
             HandlePlayerMovementInput();
             HandleCameraMovementInput();
+            HandleDodge();
         }
+
+        // MOVEMENT
         private void HandlePlayerMovementInput()
         {
             verticalInput = movementInput.y;
@@ -124,6 +137,18 @@ namespace NC
             cameraVerticalInput = cameraInput.y;
             cameraHorizontalInput = cameraInput.x;
 
+        }
+
+        // ACTIONS
+        private void HandleDodge()
+        {
+            if (dodgeInput)
+            {
+                dodgeInput = false;
+                // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
+                // PERFORM A DODGE
+                player.playerLocomotionManager.AttempToPerformDodge();
+            }
         }
     }
 }
