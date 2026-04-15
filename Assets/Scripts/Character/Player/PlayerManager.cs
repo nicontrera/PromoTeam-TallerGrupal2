@@ -4,8 +4,8 @@ namespace NC
 {
     public class PlayerManager : CharacterManager
     {
-        [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
-        [HideInInspector] public PlayerLocomotionManager playerLocomotionManager;
+        public PlayerAnimatorManager playerAnimatorManager;
+        public PlayerLocomotionManager playerLocomotionManager;
         protected override void Awake()
         {
             base.Awake();

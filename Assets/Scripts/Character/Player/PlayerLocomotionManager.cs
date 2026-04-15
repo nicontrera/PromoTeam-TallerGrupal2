@@ -11,6 +11,8 @@ namespace NC
         public float horizontalMovement;
         public float moveAmount;
 
+        public CharacterNetworkManager characterNetworkManager;
+
         private Vector3 moveDirection;
         private Vector3 targetRotationDirection;
         [SerializeField] float walkingSpeed = 2f;
@@ -22,30 +24,39 @@ namespace NC
             base.Awake();
 
             playerManager = GetComponent<PlayerManager>();
+            characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 
-        // protected override void Update()
-        // {
-        //     base.Update();
+        protected override void Update()
+        {
+            base.Update();
 
-        //     if (playerManager.IsOwner)
-        //     {
-        //         playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
-        //         playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
-        //         playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
-        //     }
-        //     else
-        //     {
-        //         verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
-        //         horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
-        //         moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
+            if (playerManager.IsOwner)
+            {
+                // playerManager.characterNetworkManager.verticalMovement.Value = verticalMovement;
+                // playerManager.characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+                // playerManager.characterNetworkManager.moveAmount.Value = moveAmount;
 
-        //         // IF NOT LOCKED ON, PASS MOVE AMOUNT
-        //         playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+                characterNetworkManager.verticalMovement.Value = verticalMovement;
+                characterNetworkManager.horizontalMovement.Value = horizontalMovement;
+                characterNetworkManager.moveAmount.Value = moveAmount;
+            }
+            else
+            {
+                // verticalMovement = playerManager.characterNetworkManager.verticalMovement.Value;
+                // horizontalMovement = playerManager.characterNetworkManager.moveAmount.Value;
+                // moveAmount = playerManager.characterNetworkManager.moveAmount.Value;
 
-        //         // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
-        //     }
-        // }
+                verticalMovement = characterNetworkManager.verticalMovement.Value;
+                horizontalMovement = characterNetworkManager.moveAmount.Value;
+                moveAmount = characterNetworkManager.moveAmount.Value;
+
+                // IF NOT LOCKED ON, PASS MOVE AMOUNT
+                playerManager.playerAnimatorManager.UpdateAnimatorMovementParameters(0, moveAmount);
+
+                // IF LOCKED ON, PASS HORIZONTAL AND VERTICAL VALUES
+            }
+        }
         public void HandleAllMovement()
         {
             // GROUNDED MOVEMENT

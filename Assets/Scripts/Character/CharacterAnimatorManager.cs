@@ -6,8 +6,8 @@ namespace NC
     {
         CharacterManager character;
 
-        float vertical;
-        float horizontal;
+        public float vertical;
+        public float horizontal;
 
         void Awake()
         {
