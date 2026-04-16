@@ -1,4 +1,4 @@
-using Unity.Services.Lobbies.Models;
+using System.Collections;
 using UnityEngine;
 
 namespace NC
@@ -106,25 +106,68 @@ namespace NC
             if (playerManager.isPerformingAction)
                 return;
 
+            // GetMovementValues();
+
             // IF WE ARE MOVING WHEN WE ATTEMP TO PERFORM A DODFE WE ROLL
             if (moveAmount > 0) // INSTEAD OF MOVEAMOUNT CAN USE  PlayerInputManager.instance.moveAmount
             {
-                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-                rollDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                // rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+                rollDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.instance.horizontalInput;
                 rollDirection.y = 0;
                 rollDirection.Normalize();
 
                 Quaternion playerRollRotation = Quaternion.LookRotation(rollDirection);
                 playerManager.transform.rotation = playerRollRotation;
 
+                // StartCoroutine(Dash());
+
                 // PERFORM A ROLL ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_04", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE
             }
             // IF WE ARE STATIONARY, WE PERFORM A BACKSTEP
             else
             {
+                // StartCoroutine(BackStep());
+
                 // PERFORM A BACKSTEP ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_02", true, true);
+            }
+        }
+
+        IEnumerator Dash()
+        {
+            float startTime = Time.time;
+
+            Vector3 rollDirection;
+
+            rollDirection = PlayerCamera.instance.cameraObject.transform.forward * 1;
+            rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+            rollDirection.y = 0;
+            rollDirection.Normalize();
+
+            while(Time.time < startTime + 0.6f)
+            {
+                playerManager.characterController.Move(rollDirection * 18f * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        IEnumerator BackStep()
+        {
+            float startTime = Time.time;
+
+            Vector3 rollDirection;
+
+            rollDirection = PlayerCamera.instance.cameraObject.transform.forward * -1;
+            rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+            rollDirection.y = 0;
+            rollDirection.Normalize();
+
+            while(Time.time < startTime + 0.4f)
+            {
+                playerManager.characterController.Move(rollDirection * 20f * Time.deltaTime);
+                yield return null;
             }
         }
 

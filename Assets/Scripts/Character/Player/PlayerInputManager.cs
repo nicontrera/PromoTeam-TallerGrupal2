@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,8 +23,9 @@ namespace NC
         public float moveAmount;
 
         [Header("PLAYER ACTIONS INPUT")]
-        [SerializeField] bool dodgeInput;
+        [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput;
+        [SerializeField] Vector3 animatorInfo;
 
 
         void Awake()
@@ -154,9 +156,31 @@ namespace NC
                 dodgeInput = false;
                 // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
                 // PERFORM A DODGE
+                animatorInfo = player.animator.deltaPosition;
+                Debug.Log(animatorInfo);
                 player.playerLocomotionManager.AttempToPerformDodge();
+
+                // StartCoroutine(Dash());
             }
         }
+
+        // IEnumerator Dash()
+        // {
+        //     float startTime = Time.time;
+
+        //     Vector3 rollDirection;
+
+        //     rollDirection = PlayerCamera.instance.cameraObject.transform.forward * 1;
+        //     rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+        //     rollDirection.y = 0;
+        //     rollDirection.Normalize();
+
+        //     while(Time.time < startTime + 0.4f)
+        //     {
+        //         player.characterController.Move(rollDirection * 20f * Time.deltaTime);
+        //         yield return null;
+        //     }
+        // }
 
         private void HandleSprinting()
         {
