@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 namespace NC
@@ -21,9 +22,12 @@ namespace NC
         [SerializeField] float runningSpeed = 4f;
         [SerializeField] float sprintingSpeed = 40f;
         [SerializeField] float rotationSpeed = 15f;
+        [SerializeField] int sprintingStaminaCost = 2;
+        
 
         [Header("Dodge")]
         private Vector3 rollDirection;
+        [SerializeField] float dodgeStaminaCost = 20;
 
         protected override void Awake()
         {
@@ -106,6 +110,8 @@ namespace NC
             if (playerManager.isPerformingAction)
                 return;
 
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+                return;
             // GetMovementValues();
 
             // IF WE ARE MOVING WHEN WE ATTEMP TO PERFORM A DODFE WE ROLL
@@ -133,6 +139,8 @@ namespace NC
                 // PERFORM A BACKSTEP ANIMATION
                 playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_02", true, true);
             }
+            playerManager.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+
         }
 
         IEnumerator Dash()
@@ -180,17 +188,29 @@ namespace NC
             }
 
             // IF WE ARE OUT OF STAMINA, SET SPRINTING TO FALSE
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                playerManager.isSprinting = false;
+                return;
+            }
 
             // IF WE ARE MOVING SPRINTING IS TRUE
             if (moveAmount >= 0.5 && !playerManager.isPerformingAction)
             {
-                playerManager.isSprinting = true;           
+                playerManager.isSprinting = true;    
+                // Debug.Log("setting isSprinting as true, is ok?");      
             }
             // IF WE ARE STATIONARY OR MOVING SLOWLY, SPRINTING IS FALSE
             else
             {
                 playerManager.isSprinting = false;           
             }
+
+            if (playerManager.isSprinting)
+            {
+                playerManager.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
+            }
+
         }
     }
 }

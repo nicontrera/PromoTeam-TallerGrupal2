@@ -7,7 +7,7 @@ namespace NC
     {
         [HideInInspector] public CharacterController characterController;
         [HideInInspector] public Animator animator;
-        // [HideInInspector] public CharacterNetworkManager characterNetworkManager;
+        [HideInInspector] public CharacterNetworkManager characterNetworkManager;
 
         [Header("Flags")]
         public bool isPerformingAction = false;
@@ -22,7 +22,7 @@ namespace NC
             DontDestroyOnLoad(this);
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
-            // characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 
         protected virtual void Update()
@@ -33,5 +33,6 @@ namespace NC
         protected virtual void LateUpdate() {
             
         }
+    
     }
 }

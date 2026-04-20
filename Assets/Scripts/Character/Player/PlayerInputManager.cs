@@ -156,8 +156,9 @@ namespace NC
                 dodgeInput = false;
                 // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
                 // PERFORM A DODGE
-                animatorInfo = player.animator.deltaPosition;
-                Debug.Log(animatorInfo);
+
+                // animatorInfo = player.animator.deltaPosition;
+                // Debug.Log(animatorInfo);
                 player.playerLocomotionManager.AttempToPerformDodge();
 
                 // StartCoroutine(Dash());
@@ -187,7 +188,7 @@ namespace NC
             if (sprintInput)
             {
                 // MAKE PLAYER SPRINTS
-                // player.isSprinting = true;
+                player.isSprinting = true;
                 player.playerLocomotionManager.HandleSprinting();
             }
             else
