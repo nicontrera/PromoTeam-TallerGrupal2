@@ -1,5 +1,8 @@
+using System.Collections;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NC
 {
@@ -13,6 +16,9 @@ namespace NC
         [Header("Character Info")]
         public TextMeshProUGUI characterName;
         public TextMeshProUGUI timePlayed;
+
+        [SerializeField] private float timeoutDuration = 3.0f;
+
 
         void OnEnable()
         {
@@ -197,7 +203,58 @@ namespace NC
         {
             Debug.Log("calling LoadGameFromCharacterSlot");
             WorldSaveGameManager.instance.currentCharacterSlotBeingUsed = characterSlot;
+            // WorldSaveGameManager.instance.LoadGame();
+            StartCoroutine(TryJoinAsClientOrThenHost());
+        }
+
+        public void SelectCurrentSlot()
+        {
+            TitleScreenManager.Instance.SelectCharacterSlot(characterSlot);
+        }
+
+        public void SelectOnHover()
+        {
+            
+        }
+
+        private IEnumerator TryJoinAsClientOrThenHost()
+    {
+        Debug.Log("Searching for host...");
+        NetworkManager.Singleton.StartClient();
+
+        float timer = 0;
+        bool connected = false;
+
+        // Callback to set connected to true
+        NetworkManager.Singleton.OnClientConnectedCallback += (id) => {
+            if (id == NetworkManager.Singleton.LocalClientId) connected = true;
+        };
+
+        // Wait for connection or timeout
+        while (timer < timeoutDuration && !connected)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!connected)
+        {
+            Debug.Log("No host found. Starting as Host instead...");
+            NetworkManager.Singleton.Shutdown();
+            
+            // Wait a frame for shutdown to process
+            yield return new WaitUntil(() => !NetworkManager.Singleton.ShutdownInProgress);
+            
+            NetworkManager.Singleton.StartHost();
+            // WorldSaveGameManager.instance.AttemptToCreateNewGame();
             WorldSaveGameManager.instance.LoadGame();
         }
+        else
+        {
+            // WorldSaveGameManager.instance.AttemptToCreateNewGame();
+            WorldSaveGameManager.instance.LoadGame();
+            Debug.Log("Joined existing host!");
+        }
+    }
     }
 }

@@ -22,6 +22,10 @@ namespace NC
 
         [SerializeField] private float timeoutDuration = 3.0f;
 
+        [Header("Character Slots")]
+        public CharacterSlot currentSelectedSlot = CharacterSlot.NO_SLOT;
+        
+
         void Awake()
         {
             if (Instance == null)
@@ -40,11 +44,13 @@ namespace NC
         }
         public void StartNewGameAsClient()
         {
-            StartCoroutine(TryJoinThenHost());
-            // NetworkManager.Singleton.StartClient();
-            
+            NetworkManager.Singleton.StartClient();
         }
 
+        public void StartNetworkAsHostOrClient()
+        {
+            StartCoroutine(TryJoinThenHost());
+        }
         public void StartNewGame()
         {
             // StartCoroutine(WorldSaveGameManager.instance.LoadNewGame());
@@ -80,9 +86,11 @@ namespace NC
             yield return new WaitUntil(() => !NetworkManager.Singleton.ShutdownInProgress);
             
             NetworkManager.Singleton.StartHost();
+            WorldSaveGameManager.instance.AttemptToCreateNewGame();
         }
         else
         {
+            WorldSaveGameManager.instance.AttemptToCreateNewGame();
             Debug.Log("Joined existing host!");
         }
     }
@@ -120,6 +128,16 @@ namespace NC
         {
             noCharacterSlotsPopUp.SetActive(false);
             mainMenuNewGameButton.Select();
+        }
+
+        public void SelectCharacterSlot(CharacterSlot characterSlot)
+        {
+            currentSelectedSlot = characterSlot;
+        }
+
+        public void SelectNoSlot()
+        {
+            currentSelectedSlot = CharacterSlot.NO_SLOT;
         }
     }
 }
