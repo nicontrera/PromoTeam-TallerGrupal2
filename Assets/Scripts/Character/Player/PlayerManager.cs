@@ -53,6 +53,7 @@ namespace NC
             {
                 PlayerCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
+                WorldSaveGameManager.instance.player = this;
 
                 // PlayerUIManager.instance.playerUIHudManager
 

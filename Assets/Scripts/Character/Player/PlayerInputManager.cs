@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,6 +37,7 @@ namespace NC
             {
                 Destroy(gameObject);
             }
+            // player = GetComponent<PlayerManager>();
         }
 
         void Start()
@@ -48,6 +48,8 @@ namespace NC
             SceneManager.activeSceneChanged += OnSceneChange;
 
             instance.enabled = false;
+
+            // player = new PlayerManager();
         }
 
         private void OnSceneChange(Scene oldScene, Scene newScene)

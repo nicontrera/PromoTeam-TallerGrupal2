@@ -5,7 +5,7 @@ public class Enums : MonoBehaviour
     
 }
 
-public enum characterSlot
+public enum CharacterSlot
 {
     CharacterSlot_01,
     CharacterSlot_02,
