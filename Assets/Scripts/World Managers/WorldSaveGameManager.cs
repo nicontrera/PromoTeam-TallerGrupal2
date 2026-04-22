@@ -271,6 +271,18 @@ namespace NC
 
         }
 
+        public void DeleteGame(CharacterSlot characterSlot)
+        {
+            saveFileDataWriter = new SaveFileDataWriter();
+            saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
+            // CHOOSE FILE BASED ON NAME
+            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(characterSlot);
+
+            
+            // saveFileDataWriter.saveFileName = saveFileName;
+            saveFileDataWriter.DeleteSaveFile();
+        }
+
         // LOAD ALL CHARACTER PROFILES SAVED ON DEVICE WHEN STARTING GAME
         private void LoadAllCharacterProfiles()
         {

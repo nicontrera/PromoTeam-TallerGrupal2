@@ -193,6 +193,34 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "552c0379-741f-4198-9b9c-b37e8d3d763d",
+            "actions": [
+                {
+                    "name": "uiBtn",
+                    "type": "Button",
+                    "id": "736bcba1-79bb-47ee-b1ec-3a1cb880cbf5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0369c8a9-41fd-4dee-8e14-501da8bce63a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "uiBtn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
