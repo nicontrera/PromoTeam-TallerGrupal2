@@ -5426,6 +5426,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 7946168519586379750, guid: 346a86243b1b1b048adbd06f673398a0, type: 3}
+    - target: {fileID: 4061249737728304410, guid: eaec7759c9194b2498fbaac6f1873fc8, type: 3}
+      propertyPath: enemyLayers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 5769987989253196580, guid: eaec7759c9194b2498fbaac6f1873fc8, type: 3}
       propertyPath: m_Name
       value: Player Input Manager
