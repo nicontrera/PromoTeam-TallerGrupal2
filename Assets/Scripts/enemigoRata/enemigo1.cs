@@ -6,6 +6,7 @@ public class enemigo1 : MonoBehaviour
     private Vector3 _objetivo;
     private float _velocidad = 5f;
     private GameObject playerAPerseguir;
+    public int ataquePositivo = 0;
 
 
     private void Start()
@@ -33,7 +34,14 @@ public class enemigo1 : MonoBehaviour
             _rb.MoveRotation(Quaternion.Slerp(transform.rotation, rotacionObjetivo, 0.2f));
         }
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision == null) return;
+        if (collision.gameObject.CompareTag("Player"))
+            { 
+                ataquePositivo+=1;
+            }
+    }
     void PersigoPlayer()
     {
         if (playerAPerseguir != null)

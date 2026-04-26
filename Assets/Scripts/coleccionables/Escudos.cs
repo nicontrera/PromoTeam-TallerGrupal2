@@ -1,13 +1,15 @@
 using UnityEngine;
 
-public class DetectPlayerColeccionable : MonoBehaviour
+public class Escudos : MonoBehaviour
 {
+    public int coleccion = 0;
     private void OnTriggerEnter(Collider other)
+
     {
         if (other.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject, 2f);
-            Debug.Log("Coleccionable recogido, se destruirá en 2 segundos.");
+            coleccion++;
         }
     }
 }

@@ -34,7 +34,6 @@ public class DetectPlayer : MonoBehaviour
             {
                 playerMasCerca = playerEnRango;
                 _distanciaMasCercana = distanciaAEsteEnemigo;
-                Debug.Log("playerMasCerca" + playerMasCerca);
                 _enemigo.SetPlayerToPerseguir(playerMasCerca);
             }
         }
