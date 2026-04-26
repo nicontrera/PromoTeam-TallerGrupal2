@@ -26,6 +26,7 @@ namespace NC
         [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput;
         [SerializeField] Vector3 animatorInfo;
+        [SerializeField] bool basicAttack1HInput = false;
 
 
 
@@ -86,6 +87,8 @@ namespace NC
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                playerControls.PlayerCombat.basicAttack1H.performed += i => basicAttack1HInput = true;
+                // playerControls.PlayerCombat.basicAttack1Hand.performed += i => basicAttack1HInput = true;
 
                 // HOLDING THE INPUT SETS THE BOOL TO TRUE
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -160,6 +163,7 @@ namespace NC
             HandleCameraMovementInput();
             HandleDodge();
             HandleSprinting();
+            HandleBasicAttack();
         }
 
         // MOVEMENT
@@ -239,6 +243,22 @@ namespace NC
             else
             {
                 player.isSprinting = false;
+            }
+        }
+
+        private void HandleBasicAttack()
+        {
+            if (basicAttack1HInput)
+            {
+                basicAttack1HInput = false;
+                // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
+                // PERFORM A DODGE
+
+                // animatorInfo = player.animator.deltaPosition;
+                // Debug.Log(animatorInfo);
+                player.playerLocomotionManager.Handle1HBasicAttack();
+
+                // StartCoroutine(Dash());
             }
         }
     }

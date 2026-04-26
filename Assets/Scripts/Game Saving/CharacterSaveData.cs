@@ -17,6 +17,14 @@ namespace NC
         public float xPosition;
         public float yPosition;
         public float zPosition;
+
+        [Header("Resources")]
+        public float currentHealth;
+        public float currentStamina;
+
+        [Header("Stats")]
+        public int vitality;
+        public int endurance;
     }
 }
 

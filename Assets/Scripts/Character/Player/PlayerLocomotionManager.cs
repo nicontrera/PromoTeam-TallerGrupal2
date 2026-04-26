@@ -29,6 +29,11 @@ namespace NC
         private Vector3 rollDirection;
         [SerializeField] float dodgeStaminaCost = 20;
 
+        public Transform attackPoint; // Un objeto vacío frente al jugador
+        public float attackRange = 0.5f; // Radio del golpe
+        public LayerMask enemyLayers; // Para no pegarle al suelo o a ti mismo
+        public int attackDamage = 20;
+
         protected override void Awake()
         {
             base.Awake();
@@ -211,6 +216,32 @@ namespace NC
                 playerManager.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
             }
 
+        }
+
+        public void Handle1HBasicAttack()
+        {
+            if (playerManager.isPerformingAction)
+                return;
+
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            playerManager.playerAnimatorManager.PlayTargetActionAnimationTrigger("Attack", true, true);
+
+            // 2. Detectar enemigos en el rango
+            // Crea una esfera invisible y guarda lo que toque en un array
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+
+            // 3. Aplicar daño a cada enemigo detectado
+            foreach (Collider enemy in hitEnemies)
+            {
+                Debug.Log("Golpeaste a: " + enemy.name);
+                
+                // Aquí llamamos a una función en el script del enemigo
+                if (enemy.GetComponent<EnemyHealth>() != null) {
+                    enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+                }
+            }
         }
     }
 }

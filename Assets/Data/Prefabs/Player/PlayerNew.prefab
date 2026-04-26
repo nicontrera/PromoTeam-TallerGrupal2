@@ -83,6 +83,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerNew
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       propertyPath: m_Controller
       value: 
@@ -125,9 +129,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4598862334857937040}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7097331087813386612}
   m_SourcePrefab: {fileID: 100100000, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
 --- !u!95 &1899784994107953086 stripped
 Animator:
@@ -340,6 +341,12 @@ MonoBehaviour:
   rotationSpeed: 15
   sprintingStaminaCost: 2
   dodgeStaminaCost: 20
+  attackPoint: {fileID: 8198362027544359373}
+  attackRange: 0.5
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  attackDamage: 20
 --- !u!143 &4496258140636944844
 CharacterController:
   m_ObjectHideFlags: 0
@@ -441,14 +448,7 @@ MonoBehaviour:
   NetworkAnimatorExpanded: 0
   AuthorityMode: 1
   m_Animator: {fileID: 1899784994107953086}
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: -1137090085
-    DestinationState: 1225364405
-    TransitionDuration: 0.25
-    TriggerNameHash: 1080829965
-    TransitionIndex: 0
+  TransitionStateInfoList: []
   AnimatorParameterEntries:
     ParameterEntries:
     - name: Horizontal
@@ -464,26 +464,6 @@ MonoBehaviour:
       Synchronize: 1
       ParameterType: 9
   AnimatorParametersExpanded: 0
---- !u!114 &7097331087813386612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5185499262236069758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 407f7952c261a784baf711a5f5440bb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  animator: {fileID: 1899784994107953086}
-  player: {fileID: 0}
-  attackPoint: {fileID: 8198362027544359373}
-  attackRange: 0.5
-  enemyLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  attackDamage: 20
 --- !u!4 &5529655866117182916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
