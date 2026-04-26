@@ -5,7 +5,8 @@ public class player : MonoBehaviour
 {
     public Rigidbody rb;
     private float _velocida = 5;
-    
+    public bool _ataque = false;// informa que no hay ataque
+
 
     void OnMove(InputValue inputValue)
     {
