@@ -9,6 +9,10 @@ namespace NC
 
         public PlayerNetworkManager playerNetworkManager;
         public PlayerStatsManager playerStatsManager;
+
+        [HideInInspector] public PlayerInventoryManager playerInventoryManager;
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -17,6 +21,7 @@ namespace NC
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
             playerStatsManager = GetComponent<PlayerStatsManager>();
+            playerInventoryManager = GetComponent<PlayerInventoryManager>();
         }
 
         protected override void Update()

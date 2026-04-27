@@ -22,13 +22,10 @@ namespace NC
 
         private void OnTriggerEnter(Collider other)
         {
-            // // Check the object 
             // if (other.gameObject.layer == LayerMask.NameToLayer("Character"))
             // {
                 
             // }
-
-            Debug.Log("asdasdasdasdasd");
             CharacterManager damageTarget = other.GetComponent<CharacterManager>();
 
             if (damageTarget != null)
