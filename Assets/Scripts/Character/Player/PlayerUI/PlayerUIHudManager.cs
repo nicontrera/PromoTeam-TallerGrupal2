@@ -1,27 +1,31 @@
 using UnityEngine;
 
-public class PlayerUIHudManager : MonoBehaviour
+namespace NC
 {
-    [SerializeField] UI_StatBar healthBar;
-    [SerializeField] UI_StatBar staminaBar;
-
-    public void SetNewHealthValue(float oldValue, float newValue)
+    public class PlayerUIHudManager : MonoBehaviour
     {
-        healthBar.SetStat(Mathf.RoundToInt(newValue));
-    }
+        [SerializeField] UI_StatBar healthBar;
+        [SerializeField] UI_StatBar staminaBar;
 
-    public void SetMaxHealthValue(int maxHealth)
-    {
-        healthBar.SetMaxStat(maxHealth);
-    }
+        public void SetNewHealthValue(float oldValue, float newValue)
+        {
+            healthBar.SetStat(Mathf.RoundToInt(newValue));
+        }
 
-    public void SetNewStaminaValue(float oldValue, float newValue)
-    {
-        staminaBar.SetStat(Mathf.RoundToInt(newValue));
-    }
+        public void SetMaxHealthValue(int maxHealth)
+        {
+            healthBar.SetMaxStat(maxHealth);
+        }
 
-    public void SetMaxStaminaValue(int maxStamina)
-    {
-        staminaBar.SetMaxStat(maxStamina);
+        public void SetNewStaminaValue(float oldValue, float newValue)
+        {
+            staminaBar.SetStat(Mathf.RoundToInt(newValue));
+        }
+
+        public void SetMaxStaminaValue(int maxStamina)
+        {
+            staminaBar.SetMaxStat(maxStamina);
+        }
     }
 }
+

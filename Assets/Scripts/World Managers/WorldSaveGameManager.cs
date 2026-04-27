@@ -244,6 +244,10 @@ namespace NC
         private void NewGame()
         {
             // SAVES THE NEWLY CREATED CHARACTER STATS, AND ITEMS (MAYBE LATER WHEN CREATION MENU SCREEN IS ADDED)
+
+            player.playerNetworkManager.vitality.Value = 15;
+            player.playerNetworkManager.endurance.Value = 10;
+
             SaveGame();
             StartCoroutine(LoadWorldScene());
         }
