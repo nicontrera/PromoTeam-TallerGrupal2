@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NC
 {
-    public class WeaponItem : Item
+    public class WeaponItem : EquipmentItem
     {
         // Animator controller override (Change attack animation based on the weapon is using)
 

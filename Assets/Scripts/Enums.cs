@@ -26,3 +26,10 @@ public enum WeaponModelSlot
     LeftHand,
     // Back slot, etc
 }
+
+public enum EquipmentModelType
+{
+    FullHelmet,
+    OpenHelmet,
+    Hood,
+}

@@ -8,7 +8,7 @@ namespace NC
         public WeaponModelSlot weaponSlot;
         public GameObject currentWeaponModel;
 
-        private void UnloadWeapon()
+        public void UnloadWeapon()
         {
             if (currentWeaponModel != null)
             {

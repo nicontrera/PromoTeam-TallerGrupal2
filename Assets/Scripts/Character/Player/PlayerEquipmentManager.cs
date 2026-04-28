@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace NC
 {
@@ -12,6 +15,16 @@ namespace NC
         public GameObject rightHandWeaponModel;
         public GameObject leftHandWeaponModel;
 
+        public bool unequipSword = false;
+
+        [Header("Debug delete later")]
+        [SerializeField] bool equipNewItems;
+        public WeaponItem armaNula;
+
+        [Header("Male Equipment Models")]
+        public GameObject maleFullHelmetObject;
+        public GameObject[] maleHeadFullHelmets;
+
 
         protected override void Awake()
         {
@@ -19,6 +32,15 @@ namespace NC
             player = GetComponent<PlayerManager>();
 
             InitializeWeaponSlots();
+
+            List<GameObject> maleFullHelmetsList = new List<GameObject>();
+
+            foreach (Transform child in maleFullHelmetObject.transform)
+            {
+                maleFullHelmetsList.Add(child.gameObject);
+            }
+
+            maleHeadFullHelmets = maleFullHelmetsList.ToArray();
         }
 
         protected override void Start()
@@ -26,6 +48,64 @@ namespace NC
             base.Start();
             
             LoadWeaponsOnBothHands();
+        }
+
+        void Update()
+        {
+            if (Keyboard.current[Key.Digit1].wasPressedThisFrame)
+            {
+                Debug.Log("key 1 to unnequip");
+                rightHandSlot.UnloadWeapon();
+            }
+            if (Keyboard.current[Key.Digit2].wasPressedThisFrame)
+            {
+                Debug.Log("key 2 to equip");
+                LoadRightWeapon();
+            }
+
+            if(equipNewItems)
+            {
+                equipNewItems = false;
+                DebugEquipNewItems();
+            }
+        }
+
+        private void DebugEquipNewItems()
+        {
+            Debug.Log("EQUIPPING NEW ITEMS");
+            // if(player.playerInventoryManager.headEquipment != null)
+            // {
+            //     LoadHeadEquipment(player.playerInventoryManager.headEquipment);
+            // }
+            LoadHeadEquipment(player.playerInventoryManager.headEquipment);
+        }
+
+        private void LoadHeadEquipment(HeadEquipmentItem equipment)
+        {
+            UnloadHeadEquipmentModels();
+
+            if (equipment == null)
+            {
+                player.playerInventoryManager.headEquipment = null;
+                return;
+            }
+
+            player.playerInventoryManager.headEquipment = equipment;
+
+            foreach (var model in equipment.equipmentModels)
+            {
+                model.LoadModel(player, true);
+            }
+        }
+
+        private void UnloadHeadEquipmentModels()
+        {
+            foreach (var model in maleHeadFullHelmets)
+            {
+                model.SetActive(false);
+            }
+
+
         }
 
         private void InitializeWeaponSlots()
