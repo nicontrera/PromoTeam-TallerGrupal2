@@ -8,7 +8,7 @@ public class Espadas : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject, 2f);
+            Destroy(gameObject, 0.5f);
             coleccion++;
         }
     }
