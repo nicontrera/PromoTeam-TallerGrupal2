@@ -2,14 +2,17 @@ using UnityEngine;
 
 public class Escudos : MonoBehaviour
 {
+    [SerializeField] private GameManager _gamemanager;
+
     public int coleccion = 0;
     private void OnTriggerEnter(Collider other)
 
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            
             Destroy(gameObject, 0.5f);
-            coleccion++;
+            _gamemanager._escudoCantidad ++;
         }
     }
 }

@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Espadas : MonoBehaviour
 {
+    [SerializeField] private GameManager _gamemanager;
+
+
     public int coleccion = 0;
     private void OnTriggerEnter(Collider other)
 
@@ -9,7 +12,7 @@ public class Espadas : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject, 0.5f);
-            coleccion++;
+            _gamemanager._espadaCantidad++;
         }
     }
 }
