@@ -4,7 +4,9 @@ namespace NC
 {
     public class EnemyHealth : MonoBehaviour
     {
-        public int maxHealth = 100;
+        public WorldSaveGameManager worldSaveGameManager;
+        public PlayerManager playerManager;
+        public int maxHealth = 40;
         int currentHealth;
 
         void Start()
@@ -17,19 +19,18 @@ namespace NC
             currentHealth -= damage;
             Debug.Log("Vida del enemigo: " + currentHealth);
 
-            // Animación de dolor (opcional)
             // animator.SetTrigger("Hurt");
 
             if (currentHealth <= 0)
             {
-                Die();
+                worldSaveGameManager.CheckForLevelUp(30);
+                //Die();
             }
         }
 
         void Die()
         {
             Debug.Log("El enemigo murió");
-            // Desactivar enemigo o destruir objeto
             Destroy(gameObject);
         }
     }

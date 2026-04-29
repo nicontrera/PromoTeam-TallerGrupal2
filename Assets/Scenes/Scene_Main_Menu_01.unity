@@ -1062,7 +1062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &415238050
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2621,7 +2621,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.94348, y: -206.5}
+  m_AnchoredPosition: {x: 403.94348, y: -139.18224}
   m_SizeDelta: {x: 370, y: 37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1006428541
@@ -2736,7 +2736,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1010303899
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2754,7 +2754,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.9436, y: -112.5}
+  m_AnchoredPosition: {x: 403.9436, y: -68.682236}
   m_SizeDelta: {x: 370, y: 37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1010303900
@@ -3545,7 +3545,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: START  HOST OR CLIENT
+  m_text: START  HOST
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4585,7 +4585,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.94348, y: -65.5}
+  m_AnchoredPosition: {x: 403.94348, y: -45.182236}
   m_SizeDelta: {x: 370, y: 37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1750719957
@@ -4624,7 +4624,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 403.94348, y: -159.5}
+  m_AnchoredPosition: {x: 403.94348, y: -92.182236}
   m_SizeDelta: {x: 370, y: 37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1750719959
@@ -6462,6 +6462,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1984025773859596331, guid: 964c07459fc5cb944be084c3fdcd81ec, type: 3}
+      propertyPath: currentPlayerExp
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3973275965744576137, guid: 964c07459fc5cb944be084c3fdcd81ec, type: 3}
       propertyPath: m_Name
       value: World Save Game Manager

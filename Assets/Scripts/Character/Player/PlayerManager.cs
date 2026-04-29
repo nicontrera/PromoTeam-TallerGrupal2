@@ -14,6 +14,7 @@ namespace NC
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
 
 
+
         protected override void Awake()
         {
             base.Awake();
@@ -59,8 +60,6 @@ namespace NC
             {
                 playerNetworkManager.endurance.Value = 12;
                 playerNetworkManager.vitality.Value = 11;
-                // Debug.Log("CARGANDO PLAYER STATS");
-                // Debug.Log("VALORES VITALITY: "+ playerNetworkManager.vitality.Value+ " Y ENDURANCE: "+playerNetworkManager.endurance.Value);
                 PlayerCamera.instance.player = this;
                 PlayerInputManager.instance.player = this;
                 WorldSaveGameManager.instance.player = this;

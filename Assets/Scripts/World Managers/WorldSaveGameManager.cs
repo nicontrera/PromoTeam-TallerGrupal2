@@ -38,6 +38,9 @@ namespace NC
         public CharacterSaveData characterSlot09;
         public CharacterSaveData characterSlot10;
 
+        public int currentPlayerExp = 0;
+        public int expRequiredForNextLevel = 50;
+
         void Awake()
         {
             // THERE CAN ONLY BE ONE INSTANCE OF THIS SCRIPT AT ONE TIME, IF ANOTHER EXISTS, DESTROY IT
@@ -135,14 +138,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-                // else
-                // {
-                //     Debug.Log("IS HOST FALSE");
-                //     player.playerNetworkManager.vitality.Value = 15;
-                //     player.playerNetworkManager.endurance.Value = 10;
-                //     SaveGame();
-                //     LoadOnlyCharacterData();
-                // }
             }
             
             saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot.CharacterSlot_02);
@@ -158,14 +153,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         Debug.Log("IS HOST FALSE");
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -182,14 +169,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         Debug.Log("IS HOST FALSE");
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -206,14 +185,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         Debug.Log("IS HOST FALSE");
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -230,14 +201,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         Debug.Log("IS HOST FALSE");
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -254,14 +217,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-                // else
-                // {
-                //     player.playerNetworkManager.vitality.Value = 15;
-                //     player.playerNetworkManager.endurance.Value = 10;
-                //     Debug.Log("IS HOST FALSE");
-                //     SaveGame();
-                //     LoadOnlyCharacterData();
-                // }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -278,14 +233,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         Debug.Log("IS HOST FALSE");
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -302,14 +249,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         Debug.Log("IS HOST FALSE");
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -326,14 +265,6 @@ namespace NC
                     NewGame();
                     return;
                 }
-            //     else
-            //     {
-            //         player.playerNetworkManager.vitality.Value = 15;
-            // player.playerNetworkManager.endurance.Value = 10;
-            //         Debug.Log("IS HOST FALSE");
-            //         SaveGame();
-            //         LoadOnlyCharacterData();
-            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -373,6 +304,7 @@ namespace NC
 
             player.playerNetworkManager.vitality.Value = 15;
             player.playerNetworkManager.endurance.Value = 10;
+            player.playerNetworkManager.playerLevel.Value = 1;
 
             SaveGame();
             StartCoroutine(LoadWorldScene());
@@ -469,8 +401,7 @@ namespace NC
 
         public void LoadOnlyCharacterData()
         {
-            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
-            
+            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);      
         }
 
         private void SubirStats()
@@ -481,6 +412,29 @@ namespace NC
         public int GetWorldSceneIndex()
         {
             return worldSceneIndex;
+        }
+
+        public void CheckForLevelUp(int expGained)
+        {
+            currentPlayerExp += expGained;
+
+            if (currentPlayerExp >= expRequiredForNextLevel)
+            {
+                Debug.Log("LEVELING UP!");
+
+                player.playerNetworkManager.playerLevel.Value = player.playerNetworkManager.playerLevel.Value + 1;
+                currentPlayerExp = currentPlayerExp - expRequiredForNextLevel;
+                expRequiredForNextLevel += 30; // Improve using a formula
+                Debug.Log("Player lvl: " + player.playerNetworkManager.playerLevel.Value);
+                Debug.Log("Current exp: " + currentPlayerExp);
+                Debug.Log("Exp required for lvlup: " + expRequiredForNextLevel);
+            }
+            else
+            {
+                Debug.Log("Player lvl: " + player.playerNetworkManager.playerLevel.Value);
+                Debug.Log("Current exp: " + currentPlayerExp);
+                Debug.Log("Exp required for lvlup: " + expRequiredForNextLevel);
+            }
         }
     }
 }
