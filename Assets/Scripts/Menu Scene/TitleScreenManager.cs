@@ -42,13 +42,16 @@ namespace NC
             }
         }
 
-        public void StartNetworkAsHost()
+        public void StartAsHost()
         {
+            Debug.Log("STARTING AS HOST");
             NetworkManager.Singleton.StartHost();
         }
-        public void StartNewGameAsClient()
+        public void StartAsClient()
         {
+            Debug.Log("STARTING AS CLIENT");
             NetworkManager.Singleton.StartClient();
+            WorldSaveGameManager.instance.AttemptToCreateNewGame(false);
         }
 
         public void StartNetworkAsHostOrClient()
@@ -57,8 +60,8 @@ namespace NC
         }
         public void StartNewGame()
         {
-            // StartCoroutine(WorldSaveGameManager.instance.LoadNewGame());
-            WorldSaveGameManager.instance.AttemptToCreateNewGame();
+            Debug.Log("STARTING NEW GAME");
+            WorldSaveGameManager.instance.AttemptToCreateNewGame(true);
         }
 
         private IEnumerator TryJoinThenHost()
@@ -90,11 +93,11 @@ namespace NC
             yield return new WaitUntil(() => !NetworkManager.Singleton.ShutdownInProgress);
             
             NetworkManager.Singleton.StartHost();
-            WorldSaveGameManager.instance.AttemptToCreateNewGame();
+            WorldSaveGameManager.instance.AttemptToCreateNewGame(true);
         }
         else
         {
-            WorldSaveGameManager.instance.AttemptToCreateNewGame();
+            WorldSaveGameManager.instance.AttemptToCreateNewGame(false);
             Debug.Log("Joined existing host!");
         }
     }

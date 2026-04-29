@@ -13,6 +13,7 @@ namespace NC
         [Header("SAVE/LOAD")]
         [SerializeField] bool saveGame;
         [SerializeField] bool loadGame;
+        [SerializeField] bool loadOnlyCharData;
 
         [Header("World Scene Index")]
         [SerializeField] int worldSceneIndex = 1;
@@ -67,6 +68,11 @@ namespace NC
                 loadGame = false;
                 LoadGame();
             }
+            if (loadOnlyCharData)
+            {
+                loadOnlyCharData = false;
+                SubirStats();
+            }
         }
 
         public string DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot characterSlot)
@@ -110,7 +116,7 @@ namespace NC
             return fileName;
         }
 
-        public void AttemptToCreateNewGame()
+        public void AttemptToCreateNewGame(bool isHost)
         {
             saveFileDataWriter = new SaveFileDataWriter();
             saveFileDataWriter.saveDataDirectoryPath = Application.persistentDataPath;
@@ -123,8 +129,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_01;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+                // else
+                // {
+                //     Debug.Log("IS HOST FALSE");
+                //     player.playerNetworkManager.vitality.Value = 15;
+                //     player.playerNetworkManager.endurance.Value = 10;
+                //     SaveGame();
+                //     LoadOnlyCharacterData();
+                // }
             }
             
             saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot.CharacterSlot_02);
@@ -134,8 +152,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_02;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         Debug.Log("IS HOST FALSE");
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -146,8 +176,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_03;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         Debug.Log("IS HOST FALSE");
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -158,8 +200,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_04;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         Debug.Log("IS HOST FALSE");
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -170,8 +224,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_05;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         Debug.Log("IS HOST FALSE");
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -182,8 +248,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_06;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+                // else
+                // {
+                //     player.playerNetworkManager.vitality.Value = 15;
+                //     player.playerNetworkManager.endurance.Value = 10;
+                //     Debug.Log("IS HOST FALSE");
+                //     SaveGame();
+                //     LoadOnlyCharacterData();
+                // }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -194,8 +272,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_07;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         Debug.Log("IS HOST FALSE");
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -206,8 +296,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_08;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         Debug.Log("IS HOST FALSE");
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -218,8 +320,20 @@ namespace NC
                 // IF THIS PROFILE SLOT IS NOT TAKEN, MAKE A NEW ONE USING THIS SLOT
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_09;
                 currentCharacterData = new CharacterSaveData();
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+            //     else
+            //     {
+            //         player.playerNetworkManager.vitality.Value = 15;
+            // player.playerNetworkManager.endurance.Value = 10;
+            //         Debug.Log("IS HOST FALSE");
+            //         SaveGame();
+            //         LoadOnlyCharacterData();
+            //     }
             }
 
             // CHECK TO SEE IF WE CAN CREATE A NEW SAVE FILE (CHECK FOR OTHER EXISTING FILES FIRST)
@@ -231,8 +345,20 @@ namespace NC
                 currentCharacterSlotBeingUsed = CharacterSlot.CharacterSlot_10;
                 currentCharacterData = new CharacterSaveData();
                 // StartCoroutine(LoadWorldScene());
-                NewGame();
-                return;
+                if (isHost)
+                {
+                    Debug.Log("IS HOST TRUE");
+                    NewGame();
+                    return;
+                }
+                // else
+                // {
+                //     player.playerNetworkManager.vitality.Value = 15;
+                //     player.playerNetworkManager.endurance.Value = 10;
+                //     Debug.Log("IS HOST FALSE");
+                //     SaveGame();
+                //     LoadOnlyCharacterData();
+                // }
             }
 
             // CREATE A NEW FILE, WITH A FILE NAME DEPENDING ON WHICH SLOT WE ARE USING
@@ -339,6 +465,18 @@ namespace NC
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
 
             yield return null;
+        }
+
+        public void LoadOnlyCharacterData()
+        {
+            player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
+            
+        }
+
+        private void SubirStats()
+        {
+            player.playerNetworkManager.vitality.Value += 10;
+            player.playerNetworkManager.endurance.Value += 10;
         }
         public int GetWorldSceneIndex()
         {
