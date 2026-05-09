@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace NC
 {
@@ -12,6 +13,9 @@ namespace NC
 
         [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+
+        public PlayerNetworkManager player;
+        public NetworkObject playerGameObject;
 
 
 
@@ -118,6 +122,39 @@ namespace NC
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+        }
+
+        public void CheckForLevelUpOk(int expGained, ulong playerId)
+        {
+            Debug.Log("Calling Check for lvl up Ok");
+            // currentPlayerExp += expGained;
+
+            playerGameObject = NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject;
+
+            player  = playerGameObject.GetComponent<PlayerNetworkManager>();
+
+            player.playerExp.Value += expGained;
+
+            if (player.playerExp.Value >= player.expRequiredForNextLevel.Value)
+            {
+                Debug.Log("LEVELING UP!");
+                player.vitality.Value += 5;
+                player.endurance.Value += 5;
+
+
+                player.playerLevel.Value = player.playerLevel.Value + 1;
+                player.playerExp.Value = player.playerExp.Value - player.expRequiredForNextLevel.Value;
+                player.expRequiredForNextLevel.Value += 30; // Improve using a formula
+                Debug.Log("Player lvl: " + player.playerLevel.Value + "Caballero Novato");
+                Debug.Log("Current exp: " + player.playerExp.Value);
+                Debug.Log("Exp required for lvlup: " + player.expRequiredForNextLevel.Value);
+            }
+            else
+            {
+                Debug.Log("Player lvl: " + player.playerLevel.Value);
+                Debug.Log("Current exp: " + player.playerExp.Value);
+                Debug.Log("Exp required for lvlup: " + player.expRequiredForNextLevel.Value);
+            }
         }
     }
 }

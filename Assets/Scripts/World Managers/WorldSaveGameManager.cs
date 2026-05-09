@@ -38,8 +38,8 @@ namespace NC
         public CharacterSaveData characterSlot09;
         public CharacterSaveData characterSlot10;
 
-        public int currentPlayerExp = 0;
-        public int expRequiredForNextLevel = 50;
+
+        // public ulong somePlayerId;
 
         void Awake()
         {
@@ -295,15 +295,16 @@ namespace NC
             // CREATE A NEW FILE, WITH A FILE NAME DEPENDING ON WHICH SLOT WE ARE USING
 
             // IF THERE ARE NOT FREE SLOTS, NOTIFY THE PLAYER, CAN'T USE UNTIL DELETES OR OVERWRITES ONE
-            TitleScreenManager.Instance.DisplayNoFreeCharacterSlotsPopUp();
+            if (isHost)
+                TitleScreenManager.Instance.DisplayNoFreeCharacterSlotsPopUp();
         }
 
         private void NewGame()
         {
             // SAVES THE NEWLY CREATED CHARACTER STATS, AND ITEMS (MAYBE LATER WHEN CREATION MENU SCREEN IS ADDED)
 
-            player.playerNetworkManager.vitality.Value = 15;
-            player.playerNetworkManager.endurance.Value = 10;
+            player.playerNetworkManager.vitality.Value = 10;
+            player.playerNetworkManager.endurance.Value = 5;
             player.playerNetworkManager.playerLevel.Value = 1;
 
             SaveGame();
@@ -414,27 +415,5 @@ namespace NC
             return worldSceneIndex;
         }
 
-        public void CheckForLevelUp(int expGained)
-        {
-            currentPlayerExp += expGained;
-
-            if (currentPlayerExp >= expRequiredForNextLevel)
-            {
-                Debug.Log("LEVELING UP!");
-
-                player.playerNetworkManager.playerLevel.Value = player.playerNetworkManager.playerLevel.Value + 1;
-                currentPlayerExp = currentPlayerExp - expRequiredForNextLevel;
-                expRequiredForNextLevel += 30; // Improve using a formula
-                Debug.Log("Player lvl: " + player.playerNetworkManager.playerLevel.Value);
-                Debug.Log("Current exp: " + currentPlayerExp);
-                Debug.Log("Exp required for lvlup: " + expRequiredForNextLevel);
-            }
-            else
-            {
-                Debug.Log("Player lvl: " + player.playerNetworkManager.playerLevel.Value);
-                Debug.Log("Current exp: " + currentPlayerExp);
-                Debug.Log("Exp required for lvlup: " + expRequiredForNextLevel);
-            }
-        }
     }
 }

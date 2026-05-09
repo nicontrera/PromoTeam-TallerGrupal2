@@ -29,13 +29,6 @@ namespace NC
 
 
 
-        // public Transform attackPoint; // Un objeto vacío frente al jugador
-        // public float attackRange = 0.5f; // Radio del golpe
-        // public LayerMask enemyLayers; // Para no pegarle al suelo o a ti mismo
-        // public int attackDamage = 20;
-
-
-
 
         void Awake()
         {
@@ -121,40 +114,8 @@ namespace NC
         void Update()
         {
             HandleAllInputs();
-            // if (Mouse.current.leftButton.wasPressedThisFrame) // Clic izquierdo por defecto
-            // {
-            //     Debug.Log("attacking");
-            //     Attack();
-            // }
+            // if (Mouse.current.leftButton.wasPressedThisFrame) // Left click
         }
-
-        // public void Attack()
-        // {
-        //     // 1. Reproducir animación
-        //     player.animator.SetTrigger("Attack");
-
-        //     // 2. Detectar enemigos en el rango
-        //     // Crea una esfera invisible y guarda lo que toque en un array
-        //     Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
-
-        //     // 3. Aplicar daño a cada enemigo detectado
-        //     foreach (Collider enemy in hitEnemies)
-        //     {
-        //         Debug.Log("Golpeaste a: " + enemy.name);
-                
-        //         // Aquí llamamos a una función en el script del enemigo
-        //         if (enemy.GetComponent<EnemyHealth>() != null) {
-        //             enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
-        //         }
-        //     }
-        // }
-
-        // // Para poder ver el rango de ataque en el editor de Unity
-        // void OnDrawGizmosSelected()
-        // {
-        //     if (attackPoint == null) return;
-        //     Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-        // }
 
         private void HandleAllInputs()
         {
@@ -250,14 +211,7 @@ namespace NC
             if (basicAttack1HInput)
             {
                 basicAttack1HInput = false;
-                // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
-                // PERFORM A DODGE
-
-                // animatorInfo = player.animator.deltaPosition;
-                // Debug.Log(animatorInfo);
                 player.playerLocomotionManager.Handle1HBasicAttack();
-
-                // StartCoroutine(Dash());
             }
         }
     }

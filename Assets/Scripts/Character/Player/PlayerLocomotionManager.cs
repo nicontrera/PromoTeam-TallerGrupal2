@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace NC
@@ -12,7 +13,7 @@ namespace NC
         [HideInInspector] public float horizontalMovement;
         [HideInInspector] public float moveAmount;
 
-        public CharacterNetworkManager characterNetworkManager;
+        // public CharacterNetworkManager characterNetworkManager;
 
         [Header("Movement Settings")]
         private Vector3 moveDirection;
@@ -38,7 +39,7 @@ namespace NC
             base.Awake();
 
             playerManager = GetComponent<PlayerManager>();
-            characterNetworkManager = GetComponent<CharacterNetworkManager>();
+            // characterNetworkManager = GetComponent<CharacterNetworkManager>();
         }
 
         public void HandleAllMovement()
@@ -133,7 +134,7 @@ namespace NC
                 // StartCoroutine(Dash());
 
                 // PERFORM A ROLL ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_04", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_04", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE, 02?
             }
             // IF WE ARE STATIONARY, WE PERFORM A BACKSTEP
             else
@@ -141,7 +142,7 @@ namespace NC
                 // StartCoroutine(BackStep());
 
                 // PERFORM A BACKSTEP ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_02", true, true);
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_02", true, true); // 01?
             }
             playerManager.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
 
@@ -219,6 +220,8 @@ namespace NC
 
         public void Handle1HBasicAttack()
         {
+            ulong thisPlayerId = NetworkManager.Singleton.LocalClientId;
+
             if (playerManager.isPerformingAction)
                 return;
 
@@ -238,9 +241,22 @@ namespace NC
                 
                 // Aquí llamamos a una función en el script del enemigo
                 if (enemy.GetComponent<EnemyHealth>() != null) {
-                    enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+                    enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage, thisPlayerId);
+                    // Debug.Log("The player id is: " + thisPlayerId);
+
+                    if (enemy.GetComponent<EnemyHealth>().currentEnemyHealth.Value <= 0)
+                    {
+                        playerManager.CheckForLevelUpOk(30, thisPlayerId);
+                    }
                 }
             }
+        }
+
+        // Para poder ver el rango de ataque en el editor de Unity
+        void OnDrawGizmosSelected()
+        {
+            if (attackPoint == null) return;
+            Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
     }
 }

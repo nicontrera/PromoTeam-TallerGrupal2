@@ -46,6 +46,7 @@ namespace NC
         {
             Debug.Log("STARTING AS HOST");
             NetworkManager.Singleton.StartHost();
+            WorldSaveGameManager.instance.AttemptToCreateNewGame(true);
         }
         public void StartAsClient()
         {
