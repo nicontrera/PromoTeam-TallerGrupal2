@@ -22,8 +22,19 @@ namespace NC
         public float moveAmount;
 
         [Header("PLAYER ACTIONS INPUT")]
-        [SerializeField] bool dodgeInput;
+        [SerializeField] bool dodgeInput = false;
         [SerializeField] bool sprintInput;
+        [SerializeField] Vector3 animatorInfo;
+        [SerializeField] bool basicAttack1HInput = false;
+
+
+
+        // public Transform attackPoint; // Un objeto vacío frente al jugador
+        // public float attackRange = 0.5f; // Radio del golpe
+        // public LayerMask enemyLayers; // Para no pegarle al suelo o a ti mismo
+        // public int attackDamage = 20;
+
+
 
 
         void Awake()
@@ -36,6 +47,7 @@ namespace NC
             {
                 Destroy(gameObject);
             }
+            // player = GetComponent<PlayerManager>();
         }
 
         void Start()
@@ -46,6 +58,8 @@ namespace NC
             SceneManager.activeSceneChanged += OnSceneChange;
 
             instance.enabled = false;
+
+            // player = new PlayerManager();
         }
 
         private void OnSceneChange(Scene oldScene, Scene newScene)
@@ -72,6 +86,8 @@ namespace NC
                 playerControls.PlayerMovement.Movement.performed += i => movementInput = i.ReadValue<Vector2>();
                 playerControls.PlayerCamera.Movement.performed += i => cameraInput = i.ReadValue<Vector2>();
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
+                playerControls.PlayerCombat.basicAttack1H.performed += i => basicAttack1HInput = true;
+                // playerControls.PlayerCombat.basicAttack1Hand.performed += i => basicAttack1HInput = true;
 
                 // HOLDING THE INPUT SETS THE BOOL TO TRUE
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -105,7 +121,40 @@ namespace NC
         void Update()
         {
             HandleAllInputs();
+            // if (Mouse.current.leftButton.wasPressedThisFrame) // Clic izquierdo por defecto
+            // {
+            //     Debug.Log("attacking");
+            //     Attack();
+            // }
         }
+
+        // public void Attack()
+        // {
+        //     // 1. Reproducir animación
+        //     player.animator.SetTrigger("Attack");
+
+        //     // 2. Detectar enemigos en el rango
+        //     // Crea una esfera invisible y guarda lo que toque en un array
+        //     Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+
+        //     // 3. Aplicar daño a cada enemigo detectado
+        //     foreach (Collider enemy in hitEnemies)
+        //     {
+        //         Debug.Log("Golpeaste a: " + enemy.name);
+                
+        //         // Aquí llamamos a una función en el script del enemigo
+        //         if (enemy.GetComponent<EnemyHealth>() != null) {
+        //             enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+        //         }
+        //     }
+        // }
+
+        // // Para poder ver el rango de ataque en el editor de Unity
+        // void OnDrawGizmosSelected()
+        // {
+        //     if (attackPoint == null) return;
+        //     Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        // }
 
         private void HandleAllInputs()
         {
@@ -113,6 +162,7 @@ namespace NC
             HandleCameraMovementInput();
             HandleDodge();
             HandleSprinting();
+            HandleBasicAttack();
         }
 
         // MOVEMENT
@@ -154,21 +204,60 @@ namespace NC
                 dodgeInput = false;
                 // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
                 // PERFORM A DODGE
+
+                // animatorInfo = player.animator.deltaPosition;
+                // Debug.Log(animatorInfo);
                 player.playerLocomotionManager.AttempToPerformDodge();
+
+                // StartCoroutine(Dash());
             }
         }
+
+        // IEnumerator Dash()
+        // {
+        //     float startTime = Time.time;
+
+        //     Vector3 rollDirection;
+
+        //     rollDirection = PlayerCamera.instance.cameraObject.transform.forward * 1;
+        //     rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+        //     rollDirection.y = 0;
+        //     rollDirection.Normalize();
+
+        //     while(Time.time < startTime + 0.4f)
+        //     {
+        //         player.characterController.Move(rollDirection * 20f * Time.deltaTime);
+        //         yield return null;
+        //     }
+        // }
 
         private void HandleSprinting()
         {
             if (sprintInput)
             {
                 // MAKE PLAYER SPRINTS
-                // player.isSprinting = true;
+                player.isSprinting = true;
                 player.playerLocomotionManager.HandleSprinting();
             }
             else
             {
                 player.isSprinting = false;
+            }
+        }
+
+        private void HandleBasicAttack()
+        {
+            if (basicAttack1HInput)
+            {
+                basicAttack1HInput = false;
+                // NOTE FOR FUTURE: RETURN (DO NOTHING) IF MENU OR INVENTORY WINDOWS IS ACTIVE/OPEN
+                // PERFORM A DODGE
+
+                // animatorInfo = player.animator.deltaPosition;
+                // Debug.Log(animatorInfo);
+                player.playerLocomotionManager.Handle1HBasicAttack();
+
+                // StartCoroutine(Dash());
             }
         }
     }

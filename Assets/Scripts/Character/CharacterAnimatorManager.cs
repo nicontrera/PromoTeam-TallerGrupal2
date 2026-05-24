@@ -28,10 +28,10 @@ namespace NC
             character.animator.SetFloat("Vertical", vertical, 0.1f, Time.deltaTime);
         }
 
-        public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = true)
+        public virtual void PlayTargetActionAnimation(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
-            // character.animator.applyRootMotion = applyRootMotion;
-            character.applyRootMotion = applyRootMotion;
+            character.animator.applyRootMotion = applyRootMotion;
+            // character.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
 
             // CAN BE USED TO STOP CHARACTER FROM ATTEMPTING NEW ACTIONS
@@ -43,6 +43,18 @@ namespace NC
             character.canRotate = canRotate;
             // BUG INTERESANTE A CORREGIR, SI EL FLAG ES FALSE SE HACE LA ANIMACION DE ROLL PERO NO SE DESPLAZA NADA EL PLAYER, SI ES TRUE SE PUEDE DESPLAZAR A CUALQUIER LADO COMO SI ESTUVIESE CORRIENDO, QUIERO QUE SE DESPLAZE HACIA ADELANTE UNA CANTIDAD QUE YO ELIJA
             character.canMove = canMove;
+        }
+
+        public virtual void PlayTargetActionAnimationTrigger(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
+        {
+
+            // character.applyRootMotion = applyRootMotion;
+            // character.animator.SetTrigger(targetAnimation);
+
+            character.animator.CrossFade(targetAnimation, 0.2f);
+
+
+            
         }
     }
 }

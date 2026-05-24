@@ -95,6 +95,15 @@
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "42030d7d-293e-4491-a697-cf84080445c3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -117,6 +126,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1614be17-cb36-4704-b90c-602c46cae329",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -191,6 +211,82 @@
                     "action": "Movement",
                     "isComposite": false,
                     "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "552c0379-741f-4198-9b9c-b37e8d3d763d",
+            "actions": [
+                {
+                    "name": "uiBtn",
+                    "type": "Button",
+                    "id": "736bcba1-79bb-47ee-b1ec-3a1cb880cbf5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0369c8a9-41fd-4dee-8e14-501da8bce63a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "uiBtn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player Combat",
+            "id": "91df3beb-e77e-4311-89c9-0d6f84ed9e51",
+            "actions": [
+                {
+                    "name": "basicAttack1H",
+                    "type": "Button",
+                    "id": "8565cdfa-1cbc-49d5-b8f1-c0a81f2cdffc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "basicAttack1Hand",
+                    "type": "Button",
+                    "id": "63bd1005-6d8f-4306-a1ad-97899caf9a1b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ad290165-e005-4524-804a-df97ef7be898",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "basicAttack1H",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "99ebb206-9ea3-4319-a566-7d347839141e",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "basicAttack1Hand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

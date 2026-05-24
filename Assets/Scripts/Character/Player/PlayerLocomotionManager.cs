@@ -1,4 +1,4 @@
-using Unity.Services.Lobbies.Models;
+using System.Collections;
 using UnityEngine;
 
 namespace NC
@@ -21,9 +21,17 @@ namespace NC
         [SerializeField] float runningSpeed = 4f;
         [SerializeField] float sprintingSpeed = 40f;
         [SerializeField] float rotationSpeed = 15f;
+        [SerializeField] int sprintingStaminaCost = 2;
+        
 
         [Header("Dodge")]
         private Vector3 rollDirection;
+        [SerializeField] float dodgeStaminaCost = 20;
+
+        public Transform attackPoint; // Un objeto vacío frente al jugador
+        public float attackRange = 0.5f; // Radio del golpe
+        public LayerMask enemyLayers; // Para no pegarle al suelo o a ti mismo
+        public int attackDamage = 20;
 
         protected override void Awake()
         {
@@ -106,25 +114,72 @@ namespace NC
             if (playerManager.isPerformingAction)
                 return;
 
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+            // GetMovementValues();
+
             // IF WE ARE MOVING WHEN WE ATTEMP TO PERFORM A DODFE WE ROLL
             if (moveAmount > 0) // INSTEAD OF MOVEAMOUNT CAN USE  PlayerInputManager.instance.moveAmount
             {
-                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-                rollDirection += PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                // rollDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                rollDirection = PlayerCamera.instance.cameraObject.transform.forward * PlayerInputManager.instance.verticalInput;
+                rollDirection += PlayerCamera.instance.cameraObject.transform.right * PlayerInputManager.instance.horizontalInput;
                 rollDirection.y = 0;
                 rollDirection.Normalize();
 
                 Quaternion playerRollRotation = Quaternion.LookRotation(rollDirection);
                 playerManager.transform.rotation = playerRollRotation;
 
+                // StartCoroutine(Dash());
+
                 // PERFORM A ROLL ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_01", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Roll_Forward_04", true, true); // THIRD PARAMETER HAS A DEFAULT TRUE VALUE
             }
             // IF WE ARE STATIONARY, WE PERFORM A BACKSTEP
             else
             {
+                // StartCoroutine(BackStep());
+
                 // PERFORM A BACKSTEP ANIMATION
-                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_01", true, true);
+                playerManager.playerAnimatorManager.PlayTargetActionAnimation("Back_Step_02", true, true);
+            }
+            playerManager.playerNetworkManager.currentStamina.Value -= dodgeStaminaCost;
+
+        }
+
+        IEnumerator Dash()
+        {
+            float startTime = Time.time;
+
+            Vector3 rollDirection;
+
+            rollDirection = PlayerCamera.instance.cameraObject.transform.forward * 1;
+            rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+            rollDirection.y = 0;
+            rollDirection.Normalize();
+
+            while(Time.time < startTime + 0.6f)
+            {
+                playerManager.characterController.Move(rollDirection * 18f * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        IEnumerator BackStep()
+        {
+            float startTime = Time.time;
+
+            Vector3 rollDirection;
+
+            rollDirection = PlayerCamera.instance.cameraObject.transform.forward * -1;
+            rollDirection += PlayerCamera.instance.cameraObject.transform.right * 0;
+            rollDirection.y = 0;
+            rollDirection.Normalize();
+
+            while(Time.time < startTime + 0.4f)
+            {
+                playerManager.characterController.Move(rollDirection * 20f * Time.deltaTime);
+                yield return null;
             }
         }
 
@@ -137,16 +192,54 @@ namespace NC
             }
 
             // IF WE ARE OUT OF STAMINA, SET SPRINTING TO FALSE
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+            {
+                playerManager.isSprinting = false;
+                return;
+            }
 
             // IF WE ARE MOVING SPRINTING IS TRUE
             if (moveAmount >= 0.5 && !playerManager.isPerformingAction)
             {
-                playerManager.isSprinting = true;           
+                playerManager.isSprinting = true;    
+                // Debug.Log("setting isSprinting as true, is ok?");      
             }
             // IF WE ARE STATIONARY OR MOVING SLOWLY, SPRINTING IS FALSE
             else
             {
                 playerManager.isSprinting = false;           
+            }
+
+            if (playerManager.isSprinting)
+            {
+                playerManager.playerNetworkManager.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
+            }
+
+        }
+
+        public void Handle1HBasicAttack()
+        {
+            if (playerManager.isPerformingAction)
+                return;
+
+            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+                return;
+
+            playerManager.playerAnimatorManager.PlayTargetActionAnimationTrigger("Attack", true, true);
+
+            // 2. Detectar enemigos en el rango
+            // Crea una esfera invisible y guarda lo que toque en un array
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+
+            // 3. Aplicar daño a cada enemigo detectado
+            foreach (Collider enemy in hitEnemies)
+            {
+                Debug.Log("Golpeaste a: " + enemy.name);
+                
+                // Aquí llamamos a una función en el script del enemigo
+                if (enemy.GetComponent<EnemyHealth>() != null) {
+                    enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
+                }
             }
         }
     }

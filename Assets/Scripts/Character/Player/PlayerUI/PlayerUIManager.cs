@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 
 namespace NC
@@ -6,6 +5,8 @@ namespace NC
     public class PlayerUIManager : MonoBehaviour
     {
         public static PlayerUIManager instance;
+
+        [HideInInspector] public PlayerUIHudManager playerUIHudManager;
 
         void Awake()
         {
@@ -17,6 +18,8 @@ namespace NC
             {
                 Destroy(gameObject);
             }
+
+            playerUIHudManager = GetComponentInChildren<PlayerUIHudManager>();
         }
         private void Start()
         {
