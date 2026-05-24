@@ -1,12 +1,14 @@
 // using Unity.Netcode;
 using Unity.Netcode;
 using UnityEngine;
-
+// DELETE THIS FILE, CODE IN ENEMYMANAGER.CS
 namespace NC
 {
-    public class EnemyHealth : NetworkBehaviour
+    public class EnemyHealth : CharacterManager
     {
         public int maxHealth = 120;
+        // public NetworkVariable<FixedString64Bytes> enemyName = new NetworkVariable<FixedString64Bytes>("4thEnemy", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public EnemyNetworkManager enemyNetworkManager;
         public NetworkVariable<int> currentEnemyHealth = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         // public PlayerNetworkManager player;
@@ -19,6 +21,13 @@ namespace NC
             DontDestroyOnLoad(gameObject);
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            // DO MORE STUFF, ONLY FOR THE ENEMY CHAR
+            enemyNetworkManager = GetComponent<EnemyNetworkManager>();
+
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -43,6 +52,8 @@ namespace NC
 
         public void TakeDamage(int damage, ulong playerId)
         {
+            Debug.Log(enemyNetworkManager.vitality.Value + "and " + enemyNetworkManager.enemyName.Value);
+            Debug.Log("enemy health is: " + enemyNetworkManager.currentHealth.Value);
 
             playerGameObject = NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject;
 
@@ -65,7 +76,7 @@ namespace NC
             if (currentEnemyHealth.Value <= 0)
             {
                 Debug.Log("here was the call to singleton or single instance object");
-                Die();
+                // Die();
             }
         }
 

@@ -218,6 +218,7 @@ namespace NC
 
         }
 
+
         public void Handle1HBasicAttack()
         {
             ulong thisPlayerId = NetworkManager.Singleton.LocalClientId;
@@ -240,11 +241,11 @@ namespace NC
                 Debug.Log("Golpeaste a: " + enemy.name);
                 
                 // Aquí llamamos a una función en el script del enemigo
-                if (enemy.GetComponent<EnemyHealth>() != null) {
-                    enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage, thisPlayerId);
+                if (enemy.GetComponent<EnemyManager>() != null) {
+                    enemy.GetComponent<EnemyManager>().TakeDamage(attackDamage, thisPlayerId);
                     // Debug.Log("The player id is: " + thisPlayerId);
 
-                    if (enemy.GetComponent<EnemyHealth>().currentEnemyHealth.Value <= 0)
+                    if (enemy.GetComponent<EnemyManager>().enemyNetworkManager.currentEnemyHealth.Value <= 0)
                     {
                         playerManager.CheckForLevelUpOk(30, thisPlayerId);
                     }

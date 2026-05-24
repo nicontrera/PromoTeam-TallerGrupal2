@@ -165,7 +165,7 @@ namespace NC
                 currentCharacterData = new CharacterSaveData();
                 if (isHost)
                 {
-                    Debug.Log("IS HOST TRUE");
+                    // Debug.Log("IS HOST TRUE");
                     NewGame();
                     return;
                 }

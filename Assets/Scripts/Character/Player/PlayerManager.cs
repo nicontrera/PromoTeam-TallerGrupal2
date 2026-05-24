@@ -126,7 +126,7 @@ namespace NC
 
         public void CheckForLevelUpOk(int expGained, ulong playerId)
         {
-            Debug.Log("Calling Check for lvl up Ok");
+            Debug.Log("Checking for lvl up!");
             // currentPlayerExp += expGained;
 
             playerGameObject = NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject;
@@ -145,7 +145,7 @@ namespace NC
                 player.playerLevel.Value = player.playerLevel.Value + 1;
                 player.playerExp.Value = player.playerExp.Value - player.expRequiredForNextLevel.Value;
                 player.expRequiredForNextLevel.Value += 30; // Improve using a formula
-                Debug.Log("Player lvl: " + player.playerLevel.Value + "Caballero Novato");
+                Debug.Log("Player lvl " + player.playerLevel.Value + ": Caballero Novato");
                 Debug.Log("Current exp: " + player.playerExp.Value);
                 Debug.Log("Exp required for lvlup: " + player.expRequiredForNextLevel.Value);
             }

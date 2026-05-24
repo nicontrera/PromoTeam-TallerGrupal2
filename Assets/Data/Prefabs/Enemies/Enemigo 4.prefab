@@ -14,11 +14,10 @@ GameObject:
   - component: {fileID: 3934496449077063842}
   - component: {fileID: 2732652066834641813}
   - component: {fileID: 4199276672123005412}
+  - component: {fileID: 9010194564887693332}
   - component: {fileID: -7940312337938874881}
-  - component: {fileID: 512825469924528734}
-  - component: {fileID: 8260885483856071195}
   m_Layer: 6
-  m_Name: Enemigo 2
+  m_Name: Enemigo 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,6 +189,42 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &9010194564887693332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4307448541000523021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5e8a646faf678842892bf1fb0909286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NC.EnemyHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  isDead:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  characterEffectsManager: {fileID: 0}
+  isPerformingAction: 0
+  canRotate: 1
+  canMove: 1
+  isSprinting: 0
+  isRolling: 0
+  maxHealth: 100
+  enemyNetworkManager: {fileID: 0}
+  currentEnemyHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  playerManager: {fileID: 0}
+  playerGameObject: {fileID: 0}
 --- !u!114 &-7940312337938874881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +254,6 @@ MonoBehaviour:
   isRolling: 0
   maxHealth: 120
   enemyNetworkManager: {fileID: 0}
-  enemyStatsManager: {fileID: 0}
   currentEnemyHealth:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -227,133 +261,3 @@ MonoBehaviour:
     m_InternalValue: 1
   playerManager: {fileID: 0}
   playerGameObject: {fileID: 0}
---- !u!114 &512825469924528734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4307448541000523021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 665e377efb1d33e4bb081df21867fbf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NC.EnemyNetworkManager
-  ShowTopMostFoldoutHeaderGroup: 1
-  currentStamina:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
-  maxStamina:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
-  currentHealth:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
-  maxHealth:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
-  endurance:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 25
-  vitality:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 20
-  enemyManager: {fileID: 0}
-  enemyName:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue:
-      utf8LengthInBytes: 8
-      bytes:
-        offset0000:
-          byte0000: 52
-          byte0001: 116
-          byte0002: 104
-          byte0003: 69
-          byte0004: 110
-          byte0005: 101
-          byte0006: 109
-          byte0007: 121
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0016:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0032:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        byte0048: 0
-        byte0049: 0
-        byte0050: 0
-        byte0051: 0
-        byte0052: 0
-        byte0053: 0
-        byte0054: 0
-        byte0055: 0
-        byte0056: 0
-        byte0057: 0
-        byte0058: 0
-        byte0059: 0
-        byte0060: 0
-        byte0061: 0
---- !u!114 &8260885483856071195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4307448541000523021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 128691b7c66827b44b9a75639f8f2caf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NC.EnemyStatsManager
-  staminaRegenerationAmount: 2
-  staminaRegenerationDelay: 2
