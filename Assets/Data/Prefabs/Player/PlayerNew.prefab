@@ -451,6 +451,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
       addedObject: {fileID: 983978901187363157}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7406199064930065475}
     - targetCorrespondingSourceObject: {fileID: 6392886965815168175, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6646469825931954382}
@@ -635,11 +638,8 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 1
-  playerLevel:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
+  baseAttack: 10
+  baseDefense: 5
   characterName:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -712,6 +712,21 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+  playerLevel:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
+  playerExp:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  expRequiredForNextLevel:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 50
 --- !u!143 &4496258140636944844
 CharacterController:
   m_ObjectHideFlags: 0
@@ -770,6 +785,8 @@ MonoBehaviour:
   playerStatsManager: {fileID: 0}
   playerInventoryManager: {fileID: 0}
   playerEquipmentManager: {fileID: 0}
+  player: {fileID: 0}
+  playerGameObject: {fileID: 0}
 --- !u!114 &3942057984574937532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,7 +816,6 @@ MonoBehaviour:
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0
-  characterNetworkManager: {fileID: 0}
   walkingSpeed: 2
   runningSpeed: 5
   sprintingSpeed: 40
@@ -879,6 +895,22 @@ MonoBehaviour:
   armaNula: {fileID: 0}
   maleFullHelmetObject: {fileID: 7173073280711781645}
   maleHeadFullHelmets: []
+--- !u!114 &7406199064930065475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185499262236069758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21391fe452b3f0542bfe817b455a6769, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
+  ShowTopMostFoldoutHeaderGroup: 1
+  testSword: {fileID: 11400000, guid: e882d8bea9635df4aba459080c3e5911, type: 2}
+  testPotion: {fileID: 11400000, guid: b25e85d542654444ba79b68b09e8132a, type: 2}
+  inventoryStacks: []
 --- !u!4 &5529655866117182916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
