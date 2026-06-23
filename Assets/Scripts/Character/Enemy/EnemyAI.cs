@@ -8,7 +8,7 @@ public class EnemyAI : NetworkBehaviour
     public enum AIState { Idle, Chasing, Attacking, Dead }
 
     [Header("Melee Weapon Setup")]
-    public Collider weaponCollider; // Drag the BoxCollider of 'GoblinClub' here!
+    public Collider weaponCollider;
     public float attackCooldown = 2.0f; // Time between club swings
     private float nextAttackTime = 0f;
 
@@ -19,7 +19,7 @@ public class EnemyAI : NetworkBehaviour
     public float moveSpeed = 3.5f;
 
     [Header("Loot Drop Hook")]
-    public GameObject worldItemPrefab; // Drag your WorldItem.prefab here!
+    public GameObject worldItemPrefab;
     public int guaranteedLootID = 2;   // ID of the potion we made earlier
 
     // Networked variables guarantee late-joiners see the correct HP and animation state
@@ -29,11 +29,6 @@ public class EnemyAI : NetworkBehaviour
     private NavMeshAgent agent;
     private Transform currentTarget;
 
-
-    // void Start()
-    // {
-    //     DontDestroyOnLoad(gameObject);
-    // }
 
     public override void OnNetworkSpawn()
     {
@@ -45,9 +40,6 @@ public class EnemyAI : NetworkBehaviour
         }
         else
         {
-            // LANDMINE #1 DISARMED: We strictly disable the NavMeshAgent on the Clients!
-            // If we didn't, the Client's local NavMesh would try to move the monster at the exact 
-            // same time the Server's NetworkTransform is trying to pull it, causing severe stuttering.
             if (TryGetComponent(out NavMeshAgent clientAgent)) 
                 clientAgent.enabled = false;
         }
@@ -55,13 +47,7 @@ public class EnemyAI : NetworkBehaviour
 
     private void Update()
     {
-        // // PUT THIS ABOVE THE RETURN:
-        // if (Time.frameCount % 60 == 0)
-        // {
-        //     Debug.Log($"<color=magenta>[HEARTBEAT]</color> Am I Spawned? {IsSpawned} | Am I Server? {IsServer}");
-        // }
-
-        // Clients literally do zero thinking. They just read 'state.Value' to play animations.
+        // Clients just read 'state.Value' to play animations
         if (!IsServer || state.Value == AIState.Dead) return;
 
         switch (state.Value)
@@ -75,10 +61,7 @@ public class EnemyAI : NetworkBehaviour
                 break;
 
             case AIState.Attacking:
-                // // For now, he just stands next to you menacingly. We'll script his swing next.
-                // if (Vector3.Distance(transform.position, currentTarget.position) > attackRange)
-                //     state.Value = AIState.Chasing;
-                // break;
+                // // For now, he just stands next to you menacingly
 
                 if (Vector3.Distance(transform.position, currentTarget.position) > attackRange)
                 {
@@ -107,17 +90,10 @@ public class EnemyAI : NetworkBehaviour
 
     private void SearchForTarget()
     {
-        // Test A: Did Unity actually recognize the word "Player"?
         int layerIndex = LayerMask.NameToLayer("Player");
         int layerMask  = LayerMask.GetMask("Player");
 
         Collider[] players = Physics.OverlapSphere(transform.position, aggroRadius, layerMask);
-
-        // Print the X-Ray report once every 60 frames so we don't blow up your console
-        // if (Time.frameCount % 60 == 0)
-        // {
-        //     Debug.Log($"<color=orange>[AI X-RAY]</color> Layer 'Player' ID: {layerIndex} | Bitmask: {layerMask} | Objects inside sphere: {players.Length}");
-        // }
 
         if (players.Length > 0)
         {
@@ -146,11 +122,6 @@ public class EnemyAI : NetworkBehaviour
         }
     }
 
-    // LANDMINE #2 DISARMED: Look at "(RequireOwnership = false)".
-    // By default, Netcode blocks clients from calling RPCs on objects they don't own. 
-    // Because the Server owns the monsters, your player's sword would throw a fatal permission error 
-    // trying to hurt it unless we explicitly grant global write-access to this specific method!
-    // [ServerRpc(RequireOwnership = false)]
 
     // [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Owner)]
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
@@ -171,7 +142,7 @@ public class EnemyAI : NetworkBehaviour
     {
         state.Value = AIState.Dead;
         
-        // Look at this absolute poetry. The inventory system pays out instantly:
+        // inventory system pays out
         Vector3 lootSpawnPos = transform.position + (Vector3.up * 0.5f);
         GameObject droppedLoot = Instantiate(worldItemPrefab, lootSpawnPos, Quaternion.identity);
         droppedLoot.GetComponent<NetworkObject>().Spawn();

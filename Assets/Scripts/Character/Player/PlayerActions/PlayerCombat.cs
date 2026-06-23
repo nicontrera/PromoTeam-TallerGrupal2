@@ -7,8 +7,8 @@ public class PlayerCombat : NetworkBehaviour
 {
     [Header("Combat Parameters")]
     public float attackRange = 3f;
-    public float attackCooldown = 0.8f; // Can't spam click at Mach 10
-    public Transform cameraTransform;   // Crucial: Ray must shoot from the camera's eyes, not the stomach!
+    public float attackCooldown = 0.8f; 
+    public Transform cameraTransform;   
 
     private PlayerNetworkManager stats;
     private float nextAttackTime = 0f;
@@ -59,7 +59,6 @@ public class PlayerCombat : NetworkBehaviour
             // Did the laser hit flesh?
             if (hit.collider.TryGetComponent(out EnemyAI goblin))
             {
-                // Grab the player's live calculated damage (Base 10 + Sword 3 = 13)
                 int damageToDeal = stats.GetTotalAttack(); 
                 
                 Debug.Log($"<color=orange>[SERVER]</color> Hit registered! Dealing {damageToDeal} damage to Goblin.");
