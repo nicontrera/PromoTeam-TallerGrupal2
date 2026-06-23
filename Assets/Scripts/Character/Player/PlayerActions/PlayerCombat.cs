@@ -1,67 +1,71 @@
-// using UnityEngine;
-// using UnityEngine.InputSystem;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using NC;
 
-// namespace NC
-// {
-//     public class PlayerCombat : MonoBehaviour
-//     {
-//         // public Animator animator;
-        
-//         public PlayerManager player;
-//         public CharacterAnimatorManager characterAnimatorManager;
-//         public Transform attackPoint; // Un objeto vacío frente al jugador
-//         public float attackRange = 0.5f; // Radio del golpe
-//         public LayerMask enemyLayers; // Para no pegarle al suelo o a ti mismo
-//         public int attackDamage = 20;
+public class PlayerCombat : NetworkBehaviour
+{
+    [Header("Combat Parameters")]
+    public float attackRange = 3f;
+    public float attackCooldown = 0.8f; // Can't spam click at Mach 10
+    public Transform cameraTransform;   // Crucial: Ray must shoot from the camera's eyes, not the stomach!
 
-//         void Update()
-//         {
-//             if (Mouse.current.leftButton.wasPressedThisFrame) // Clic izquierdo por defecto
-//             {
-//                 Debug.Log("attacking");
-//                 Attack();
-//             }
-//         }
+    private PlayerNetworkManager stats;
+    private float nextAttackTime = 0f;
 
-//         void Awake()
-//         {
-//             player = GetComponent<PlayerManager>();
-//             characterAnimatorManager = GetComponent<CharacterAnimatorManager>();
-//         }
+    private void Awake()
+    {
+        stats = GetComponent<PlayerNetworkManager>();
+    }
 
-//         public void Attack()
-//         {
-//             // 1. Reproducir animación
-//             // player.playerAnimatorManager.PlayTargetActionAnimation("Attack", true, true);
-//             // player.playerAnimatorManager.PlayTargetActionAnimation("Attack", true, false);
-//             // player.playerAnimatorManager.PlayTargetActionAnimation("Attack", false, false);
-//             // player.playerAnimatorManager.PlayTargetActionAnimation("Attack", false, true);
+    private void Update()
+    {
+        // Only the local player can trigger their own sword swings
+        if (!IsOwner) return;
 
-//             player.playerAnimatorManager.PlayTargetActionAnimationTrigger("Attack", true, true);
+        if (Time.time >= nextAttackTime && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            // Have we equipped a weapon? (Can't punch a goblin to death just yet)
+            if (stats.equippedWeapon == null)
+            {
+                Debug.LogWarning("Cannot attack: No weapon equipped in your hand!");
+                return;
+            }
 
-//             Debug.Log("after hit animation call");
+            nextAttackTime = Time.time + attackCooldown;
+            SwingSwordLocal();
+        }
+    }
 
-//             // 2. Detectar enemigos en el rango
-//             // Crea una esfera invisible y guarda lo que toque en un array
-//             Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+    private void SwingSwordLocal()
+    {
+        // 1. Play your local sword-swing animation and WHOOSH audio here later!
+        Debug.Log("<color=cyan>[CLIENT]</color> Swung sword!");
 
-//             // 3. Aplicar daño a cada enemigo detectado
-//             foreach (Collider enemy in hitEnemies)
-//             {
-//                 Debug.Log("Golpeaste a: " + enemy.name);
+        // 2. Calculate the exact origin and trajectory of your camera's center pixel
+        Vector3 rayOrigin = cameraTransform ? cameraTransform.position : transform.position + (Vector3.up * 1.5f);
+        Vector3 rayDirection = cameraTransform ? cameraTransform.forward : transform.forward;
+
+        // 3. Radio the server to fire the authoritative physics laser
+        PerformRaycastAttackServerRpc(rayOrigin, rayDirection);
+    }
+
+    [ServerRpc]
+    private void PerformRaycastAttackServerRpc(Vector3 origin, Vector3 direction)
+    {
+        // SERVER AUTHORITY: The server draws the 3-meter line in its own trusted physics universe
+        if (Physics.Raycast(origin, direction, out RaycastHit hit, attackRange))
+        {
+            // Did the laser hit flesh?
+            if (hit.collider.TryGetComponent(out EnemyAI goblin))
+            {
+                // Grab the player's live calculated damage (Base 10 + Sword 3 = 13)
+                int damageToDeal = stats.GetTotalAttack(); 
                 
-//                 // Aquí llamamos a una función en el script del enemigo
-//                 if (enemy.GetComponent<EnemyHealth>() != null) {
-//                     enemy.GetComponent<EnemyHealth>().TakeDamage(attackDamage);
-//                 }
-//             }
-//         }
-
-//         // Para poder ver el rango de ataque en el editor de Unity
-//         // void OnDrawGizmosSelected()
-//         // {
-//         //     if (attackPoint == null) return;
-//         //     Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-//         // }
-//     }
-// }
+                Debug.Log($"<color=orange>[SERVER]</color> Hit registered! Dealing {damageToDeal} damage to Goblin.");
+                
+                goblin.TakeDamageServerRpc(damageToDeal);
+            }
+        }
+    }
+}

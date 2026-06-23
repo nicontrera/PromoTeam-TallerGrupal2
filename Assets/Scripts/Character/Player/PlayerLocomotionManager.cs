@@ -9,6 +9,10 @@ namespace NC
         // THIS VALUES ARE TAKEN FROM THE INPUT MANAGER
         PlayerManager playerManager;
 
+        [Header("Attack Settings")]
+        [SerializeField] float attackStaminaCost = 15f;
+        public float raycastAttackRange = 3.5f; // Range for the camera laser
+
         [HideInInspector] public float verticalMovement;
         [HideInInspector] public float horizontalMovement;
         [HideInInspector] public float moveAmount;
@@ -219,6 +223,41 @@ namespace NC
         }
 
 
+        // public void Handle1HBasicAttack()
+        // {
+        //     ulong thisPlayerId = NetworkManager.Singleton.LocalClientId;
+
+        //     if (playerManager.isPerformingAction)
+        //         return;
+
+        //     if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+        //         return;
+
+        //     playerManager.playerAnimatorManager.PlayTargetActionAnimationTrigger("Attack", true, true);
+
+        //     // 2. Detectar enemigos en el rango
+        //     // Crea una esfera invisible y guarda lo que toque en un array
+        //     Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+
+        //     // 3. Aplicar daño a cada enemigo detectado
+        //     foreach (Collider enemy in hitEnemies)
+        //     {
+        //         Debug.Log("Golpeaste a: " + enemy.name);
+                
+        //         // Aquí llamamos a una función en el script del enemigo
+        //         if (enemy.GetComponent<EnemyManager>() != null) {
+        //             enemy.GetComponent<EnemyManager>().TakeDamage(attackDamage, thisPlayerId);
+        //             // Debug.Log("The player id is: " + thisPlayerId);
+
+        //             if (enemy.GetComponent<EnemyManager>().enemyNetworkManager.currentEnemyHealth.Value <= 0)
+        //             {
+        //                 playerManager.CheckForLevelUpOk(30, thisPlayerId);
+        //             }
+        //         }
+        //     }
+        // }
+
+
         public void Handle1HBasicAttack()
         {
             ulong thisPlayerId = NetworkManager.Singleton.LocalClientId;
@@ -226,29 +265,31 @@ namespace NC
             if (playerManager.isPerformingAction)
                 return;
 
-            if (playerManager.playerNetworkManager.currentStamina.Value <= 0)
+            // Verify we have enough stamina to swing
+            if (playerManager.playerNetworkManager.currentStamina.Value < attackStaminaCost)
                 return;
 
+            // 1. Deduct Stamina instantly on the client for a responsive UI
+            playerManager.playerNetworkManager.currentStamina.Value -= attackStaminaCost;
+
+            // 2. Play attack animation gatekeeper
             playerManager.playerAnimatorManager.PlayTargetActionAnimationTrigger("Attack", true, true);
 
-            // 2. Detectar enemigos en el rango
-            // Crea una esfera invisible y guarda lo que toque en un array
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPoint.position, attackRange, enemyLayers);
+            // 3. Grab the live inventory damage (Base Attack + Weapon Bonus)
+            int finalAttackDamage = playerManager.playerNetworkManager.GetTotalAttack();
 
-            // 3. Aplicar daño a cada enemigo detectado
-            foreach (Collider enemy in hitEnemies)
+            // 4. Perform the Screen-Center Raycast from the Camera perspective
+            Transform camTransform = PlayerCamera.instance.transform;
+            if (Physics.Raycast(camTransform.position, camTransform.forward, out RaycastHit hit, raycastAttackRange, enemyLayers))
             {
-                Debug.Log("Golpeaste a: " + enemy.name);
-                
-                // Aquí llamamos a una función en el script del enemigo
-                if (enemy.GetComponent<EnemyManager>() != null) {
-                    enemy.GetComponent<EnemyManager>().TakeDamage(attackDamage, thisPlayerId);
-                    // Debug.Log("The player id is: " + thisPlayerId);
+                Debug.Log($"Laser aimed successfully! Hit collider: {hit.collider.name}");
 
-                    if (enemy.GetComponent<EnemyManager>().enemyNetworkManager.currentEnemyHealth.Value <= 0)
-                    {
-                        playerManager.CheckForLevelUpOk(30, thisPlayerId);
-                    }
+                if (hit.collider.TryGetComponent(out NetworkObject enemyNetObj))
+                {
+                    // Radio the Server to confirm the hit and apply damage globally!
+                    Debug.Log($"TESTING 1ST IF");
+
+                    playerManager.playerNetworkManager.NotifyAttackHitServerRpc(enemyNetObj.NetworkObjectId, finalAttackDamage, thisPlayerId);
                 }
             }
         }

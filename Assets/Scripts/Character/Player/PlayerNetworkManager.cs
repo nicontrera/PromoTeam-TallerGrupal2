@@ -122,5 +122,58 @@ namespace NC
             if (equippedArmor != null) maxHp += equippedArmor.maxHpBonus;
             return maxHp;
         }
+
+
+
+        // [ServerRpc]
+        // public void NotifyAttackHitServerRpc(ulong targetNetworkObjectId, int damageToDeal, ulong sourceClientId)
+        // {
+        //     // SERVER AUTHORITY: Only the Server is legally allowed to alter a monster's HP
+        //     if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject netObj))
+        //     {
+        //         Debug.Log($"TESTING 2ND IF");
+
+        //         if (netObj.TryGetComponent(out EnemyManager enemy))
+        //         {
+        //             Debug.Log($"[SERVER] Player {sourceClientId} hit enemy {netObj.name} for {damageToDeal} damage!");
+                    
+        //             // Call the enemy's authoritative damage function
+        //             enemy.TakeDamage(damageToDeal, sourceClientId);
+                    
+        //             // Check for death and reward EXP
+        //             if (enemy.enemyNetworkManager.currentEnemyHealth.Value <= 0)
+        //             {
+        //                 player.CheckForLevelUpOk(30, sourceClientId);
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        [ServerRpc]
+        public void NotifyAttackHitServerRpc(ulong targetNetworkObjectId, int damageToDeal, ulong sourceClientId)
+        {
+            bool existsInLedger = NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectId, out NetworkObject netObj);
+            
+            // THE FIX: We ask the object for 'EnemyAI', not EnemyManager!
+            EnemyAI goblin = null;
+            bool hasEnemyScript = existsInLedger && netObj.TryGetComponent(out goblin);
+
+            Debug.Log($"<color=yellow>[SERVER WIRETAP]</color> Client {sourceClientId} hit NetID [{targetNetworkObjectId}] | Found in Ledger? {existsInLedger} | Has EnemyAI? {hasEnemyScript}");
+
+            if (existsInLedger && hasEnemyScript && goblin != null)
+            {
+                Debug.Log($"[SERVER] Authorized hit on {netObj.name} for {damageToDeal} damage.");
+                
+                // Trigger the Goblin's native damage RPC
+                goblin.TakeDamageServerRpc(damageToDeal);
+
+                // Check if the Goblin's NetworkVariable HP dropped to zero
+                if (goblin.currentHP.Value <= 0)
+                {
+                    player.CheckForLevelUpOk(30, sourceClientId);
+                }
+            }
+        }
     }
 }

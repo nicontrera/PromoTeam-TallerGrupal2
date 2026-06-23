@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -393,7 +394,11 @@ namespace NC
         }
         public IEnumerator LoadWorldScene()
         {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
+
+            // Use this exact line to switch scenes in multiplayer:
+            NetworkManager.Singleton.SceneManager.LoadScene("Scene_World_01_testing", UnityEngine.SceneManagement.LoadSceneMode.Single);
+            
+            // AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
 
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
 

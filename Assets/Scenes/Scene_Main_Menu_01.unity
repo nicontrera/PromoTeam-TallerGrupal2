@@ -7418,9 +7418,17 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 3690099411
       objectReference: {fileID: 0}
+    - target: {fileID: 3737826196947481286, guid: 70d7913698a64094894c7205baebef59, type: 3}
+      propertyPath: goblinEnemyPrefab
+      value: 
+      objectReference: {fileID: 705941859373195331, guid: 5763756c7e7d7734a9302c735b9ccfe4, type: 3}
     - target: {fileID: 6518607404022575690, guid: 70d7913698a64094894c7205baebef59, type: 3}
       propertyPath: m_Name
       value: WorldNetworkSpawnManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6518607404022575690, guid: 70d7913698a64094894c7205baebef59, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7176171496152411390, guid: 70d7913698a64094894c7205baebef59, type: 3}
       propertyPath: m_LocalPosition.x

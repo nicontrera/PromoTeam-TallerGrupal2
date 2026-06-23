@@ -59,4 +59,18 @@ public class InventorySlot : MonoBehaviour
 //         Debug.LogWarning($"<color=yellow>[SILENT FAIL]</color> currentStack is null? {currentStack == null} | playerInventory is null? {playerInventory == null}");
 //     }
 // }
+
+// Hook this to a little "X" button sitting inside your slot prefab!
+    public void OnDropButtonClicked()
+    {
+        if (currentStack?.item != null && playerInventory != null)
+        {
+            // Tell the server to spit it onto the ground
+            playerInventory.DropItemServerRpc(currentStack.item.itemID, currentStack.quantity);
+            
+            // Delete the stack from our local backpack
+            playerInventory.inventoryStacks.Remove(currentStack);
+            InventoryUI.Instance.RefreshUI();
+        }
+    }
 }

@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1958765511
+  GlobalObjectIdHash: 1859066504
   InScenePlacedSourceGlobalObjectIdHash: 1958765511
   DeferredDespawnTick: 0
   Ownership: 1
@@ -220,11 +220,6 @@ MonoBehaviour:
   maxHealth: 120
   enemyNetworkManager: {fileID: 0}
   enemyStatsManager: {fileID: 0}
-  currentEnemyHealth:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 1
   playerManager: {fileID: 0}
   playerGameObject: {fileID: 0}
 --- !u!114 &512825469924528734
@@ -343,6 +338,11 @@ MonoBehaviour:
         byte0059: 0
         byte0060: 0
         byte0061: 0
+  currentEnemyHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 1
 --- !u!114 &8260885483856071195
 MonoBehaviour:
   m_ObjectHideFlags: 0

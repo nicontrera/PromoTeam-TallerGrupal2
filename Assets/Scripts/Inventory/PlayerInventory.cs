@@ -5,11 +5,14 @@ using NC;
 
 public class PlayerInventory : NetworkBehaviour
 {
+    [Header("Ground Loot Setup")]
+    public GameObject worldItemPrefab; // Drag your WorldItem.prefab here in the Inspector!
+    public float pickupRadius = 2.5f;
+
+
     [Header("Debug Testing")]
     public ItemData testSword;
     public ItemData testPotion;
-
-
 
 
     public event System.Action OnInventoryChanged;
@@ -242,5 +245,71 @@ public class PlayerInventory : NetworkBehaviour
             
             Debug.Log("Cheat activated: Added Test Items!");
         }
+
+
+        // Press 'F' to pick up nearby ground items
+        if (UnityEngine.InputSystem.Keyboard.current != null && 
+            UnityEngine.InputSystem.Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            ScanForNearbyLoot();
+        }
+    }
+
+
+
+
+    private void ScanForNearbyLoot()
+    {
+        // Draw an invisible physics bubble around the player
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, pickupRadius);
+
+        foreach (Collider hit in hitColliders)
+        {
+            if (hit.TryGetComponent(out WorldItemInstance lootInstance))
+            {
+                // Found one! Ask the server to grant it to us using its unique Network ID.
+                ulong netObjID = lootInstance.GetComponent<NetworkObject>().NetworkObjectId;
+                RequestPickupLootServerRpc(netObjID);
+                break; // Only pick up one item per 'F' press
+            }
+        }
+    }
+
+    [ServerRpc]
+    private void RequestPickupLootServerRpc(ulong targetNetworkObjectID)
+    {
+        // SERVER SECURITY CHECK: Look up the NetworkObject by its ID in the global registry
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetworkObjectID, out NetworkObject netObj))
+        {
+            WorldItemInstance loot = netObj.GetComponent<WorldItemInstance>();
+            
+            if (loot != null && loot.netItemID.Value != -1)
+            {
+                ItemData data = ItemDatabase.GetItemByID(loot.netItemID.Value);
+                
+                // 1. Give it to the player
+                AddItem(data, loot.netQuantity.Value);
+
+                // 2. Erase the ground object from the network
+                loot.ClaimAndDestroy();
+            }
+        }
+    }
+
+    // Called by UI when a player decides to throw an item onto the floor
+    [ServerRpc]
+    public void DropItemServerRpc(int itemID, int quantity)
+    {
+        // Spawn it 1.5 meters in front of the player's chest
+        Vector3 dropPosition = transform.position + (transform.forward * 1.5f) + (Vector3.up * 0.5f);
+        
+        GameObject newLoot = Instantiate(worldItemPrefab, dropPosition, Quaternion.identity);
+        NetworkObject netObj = newLoot.GetComponent<NetworkObject>();
+        
+        netObj.Spawn(); // Tells Netcode: "Broadcast this object's birth to all connected PCs!"
+
+        WorldItemInstance lootScript = newLoot.GetComponent<WorldItemInstance>();
+        lootScript.netItemID.Value = itemID;
+        lootScript.netQuantity.Value = quantity;
     }
 }
