@@ -159,7 +159,7 @@ namespace NC
             EnemyAI goblin = null;
             bool hasEnemyScript = existsInLedger && netObj.TryGetComponent(out goblin);
 
-            Debug.Log($"<color=yellow>[SERVER WIRETAP]</color> Client {sourceClientId} hit NetID [{targetNetworkObjectId}] | Found in Ledger? {existsInLedger} | Has EnemyAI? {hasEnemyScript}");
+            // Debug.Log($"<color=yellow>[SERVER WIRETAP]</color> Client {sourceClientId} hit NetID [{targetNetworkObjectId}] | Found in Ledger? {existsInLedger} | Has EnemyAI? {hasEnemyScript}");
 
             if (existsInLedger && hasEnemyScript && goblin != null)
             {

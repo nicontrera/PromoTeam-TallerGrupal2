@@ -208,7 +208,8 @@ public class PlayerInventory : NetworkBehaviour
             InventoryUI.Instance.armorSlotUI.PutItemInSlot(stack);
             inventoryStacks.Remove(stack);
 
-            stats.RequestEquipWeaponServerRpc(stack.item.itemID);
+            // stats.RequestEquipWeaponServerRpc(stack.item.itemID);
+            stats.RequestEquipArmorServerRpc(stack.item.itemID);
 
             OnInventoryChanged?.Invoke();
         }

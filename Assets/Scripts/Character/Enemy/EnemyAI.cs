@@ -152,7 +152,7 @@ public class EnemyAI : NetworkBehaviour
         lootData.netQuantity.Value = 1;
 
         // Destroy the monster across the network
-        GetComponent<NetworkObject>().Despawn(true);
+        // GetComponent<NetworkObject>().Despawn(true);
     }
 
 
