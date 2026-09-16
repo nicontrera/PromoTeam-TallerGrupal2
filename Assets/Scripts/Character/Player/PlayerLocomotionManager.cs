@@ -27,6 +27,11 @@ namespace NC
         [SerializeField] float sprintingSpeed = 40f;
         [SerializeField] float rotationSpeed = 15f;
         [SerializeField] int sprintingStaminaCost = 2;
+
+        [Header("Gravity")]
+        [SerializeField] float gravity = -15f;
+        [SerializeField] float groundedYVelocity = -2f; // Small constant downward push while grounded - keeps isGrounded reliable on slopes/uneven terrain
+        private float verticalVelocity;
         
 
         [Header("Dodge")]
@@ -73,26 +78,41 @@ namespace NC
             moveDirection = PlayerCamera.instance.transform.forward * verticalMovement;
             moveDirection = moveDirection + PlayerCamera.instance.transform.right * horizontalMovement;
             moveDirection.Normalize();
-            moveDirection.y = 0;
+            moveDirection.y = 0; // horizontal direction only - gravity is combined in separately below
 
+            float currentSpeed;
             if (playerManager.isSprinting)
             {
-                playerManager.characterController.Move(moveDirection * sprintingSpeed * Time.deltaTime);
+                currentSpeed = sprintingSpeed;
+            }
+            else if (PlayerInputManager.instance.moveAmount > 0.5f)
+            {
+                // MOVE AT RUNNING SPEED
+                currentSpeed = runningSpeed;
             }
             else
             {
-                if (PlayerInputManager.instance.moveAmount > 0.5f)
-                {
-                    // MOVE AT RUNNING SPEED
-                    playerManager.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
-                }
-                else if(PlayerInputManager.instance.moveAmount <= 0.5f)
-                {
-                    // MOVE AT WALKING SPEED
-                    playerManager.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
-                }
+                // MOVE AT WALKING SPEED
+                currentSpeed = walkingSpeed;
             }
 
+            // GRAVITY
+            if (playerManager.characterController.isGrounded)
+            {
+                // A SMALL CONSTANT DOWNWARD VALUE RATHER THAN 0 - KEEPS isGrounded FROM
+                // FLICKERING FALSE ON SLOPES/BUMPS, WHICH TERRAIN HAS PLENTY OF
+                verticalVelocity = groundedYVelocity;
+            }
+            else
+            {
+                verticalVelocity += gravity * Time.deltaTime;
+            }
+
+            // HORIZONTAL MOVEMENT SCALES WITH SPEED, VERTICAL VELOCITY DOES NOT -
+            // COMBINING THEM BEFORE ONE Move() CALL KEEPS FALLING SPEED CORRECT
+            // REGARDLESS OF WHETHER YOU'RE WALKING, RUNNING, OR SPRINTING
+            Vector3 finalMove = (moveDirection * currentSpeed) + (Vector3.up * verticalVelocity);
+            playerManager.characterController.Move(finalMove * Time.deltaTime);
         }
         private void HandleRotation()
         {
