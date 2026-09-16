@@ -16,8 +16,9 @@ namespace NC
         [SerializeField] bool loadGame;
         [SerializeField] bool loadOnlyCharData;
 
-        [Header("World Scene Index")]
-        [SerializeField] int worldSceneIndex = 1;
+        [Header("World Scene")]
+        [Tooltip("Must exactly match a scene name that's added to Build Settings.")]
+        [SerializeField] string worldSceneName = "Scene_World_01_testing";
 
         [Header("Save Data Writer")]
         private SaveFileDataWriter saveFileDataWriter;
@@ -141,8 +142,7 @@ namespace NC
                 }
             }
             
-            saveFileDataWriter.saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot.CharacterSlot_02);
-            // saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot.CharacterSlot_02);
+            saveFileName = DecideCharacterFileNameBasedOnSlotBeingUsed(CharacterSlot.CharacterSlot_02);
 
             if (!saveFileDataWriter.CheckToSeeIfFileExists())
             {
@@ -395,11 +395,8 @@ namespace NC
         }
         public IEnumerator LoadWorldScene()
         {
-
             // Use this exact line to switch scenes in multiplayer:
-            NetworkManager.Singleton.SceneManager.LoadScene("Scene_World_01_testing", UnityEngine.SceneManagement.LoadSceneMode.Single);
-            
-            // AsyncOperation loadOperation = SceneManager.LoadSceneAsync(worldSceneIndex);
+            NetworkManager.Singleton.SceneManager.LoadScene(worldSceneName, UnityEngine.SceneManagement.LoadSceneMode.Single);
 
             player.LoadGameDataFromCurrentCharacterData(ref currentCharacterData);
 
@@ -416,9 +413,17 @@ namespace NC
             player.playerNetworkManager.vitality.Value += 10;
             player.playerNetworkManager.endurance.Value += 10;
         }
-        public int GetWorldSceneIndex()
+        public string GetWorldSceneName()
         {
-            return worldSceneIndex;
+            return worldSceneName;
+        }
+
+        // CALL THIS BEFORE StartAsHost() TO CHOOSE WHICH SCENE GETS LOADED -
+        // ONLY MEANINGFUL FOR THE HOST, SINCE CLIENTS AUTOMATICALLY SYNC TO
+        // WHATEVER SCENE THE HOST HAS ALREADY LOADED
+        public void SetWorldSceneName(string sceneName)
+        {
+            worldSceneName = sceneName;
         }
 
     }

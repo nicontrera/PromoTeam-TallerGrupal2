@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b8364f136f430d4ba9d0ae1a9e07561, type: 3}
   m_Name: ShortSword
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 0
+  itemID: 15
   itemName: ShortSword
   type: 1
   icon: {fileID: 21300000, guid: c510b3a6afe881e4e9b64cef019d3120, type: 3}
-  attackBonus: 2
-  defenseBonus: 0
+  isStackable: 0
+  maxStackSize: 99
+  attackBonus: 5
+  defenseBonus: 3
   maxHpBonus: 0
   maxMpBonus: 0
   restoreHpAmount: 0
   restoreMpAmount: 0
+  equipModelPrefab: {fileID: 919132149155446097, guid: b107324c1f20ed04bb028132215ae643, type: 3}

@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 3347575980930455197}
   - component: {fileID: 248915517987622006}
   - component: {fileID: 5554537537108136180}
+  - component: {fileID: 5910099664933959944}
+  - component: {fileID: 1511241080163027967}
   m_Layer: 6
   m_Name: Goblin
   m_TagString: Untagged
@@ -225,6 +227,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   ShowTopMostFoldoutHeaderGroup: 1
+  isDead:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
+  characterEffectsManager: {fileID: 0}
+  isPerformingAction: 0
+  canRotate: 1
+  canMove: 1
+  isSprinting: 0
+  isRolling: 0
   weaponCollider: {fileID: 4799339684808329971}
   attackCooldown: 2
   maxHealth: 30
@@ -232,17 +248,73 @@ MonoBehaviour:
   attackRange: 2
   moveSpeed: 3.5
   worldItemPrefab: {fileID: 1885740986831734866, guid: 481220fc1815c6247b456e033f45b521, type: 3}
-  guaranteedLootID: 1
-  currentHP:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 0
+  lootTable:
+  - itemID: 2
+    quantity: 3
+  - itemID: 1
+    quantity: 2
+  - itemID: 15
+    quantity: 1
   state:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+--- !u!114 &5910099664933959944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705941859373195331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0692f97a4727abf4397669526d927a0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NC.CharacterNetworkManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  currentStamina:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  maxStamina:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  currentHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  maxHealth:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 0
+  endurance:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 25
+  vitality:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: 20
+--- !u!114 &1511241080163027967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705941859373195331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9c75b591d0339e4aa2e210d714f7fa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NC.CharacterEffectsManager
 --- !u!1 &7932448025771120337
 GameObject:
   m_ObjectHideFlags: 0

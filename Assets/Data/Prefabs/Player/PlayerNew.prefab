@@ -313,13 +313,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7664881085359542708}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.9711396, y: 0.027607907, z: 0.19715756, w: 0.13135709}
-  m_LocalPosition: {x: -0.163, y: -0.052, z: -0.065}
+  m_LocalRotation: {x: 0.8550337, y: -0.04672897, z: 0.19351944, w: 0.47883624}
+  m_LocalPosition: {x: -0.16296884, y: -0.051997602, z: -0.06501722}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9173773159405844942}
-  m_LocalEulerAnglesHint: {x: 165.863, y: -23.72699, z: -6.2409973}
+  m_LocalEulerAnglesHint: {x: 123.183, y: -31.526001, z: -11.10498}
 --- !u!114 &3193305510211992804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,8 +332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9b9885b7e654640aeac03f8c2e9113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NC.WeaponModelInstantiationSlot
-  weaponSlot: 1
-  currentWeaponModel: {fileID: 0}
+  weaponSlot: 0
+  currentWeaponModel: {fileID: 3884528335766682674, guid: 69866532ee7314147ae7d0adc2e3c2f8, type: 3}
 --- !u!1001 &5420066530755654191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -687,13 +687,13 @@ PrefabInstance:
       addedObject: {fileID: 4235243344170755551}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2699937301524612109}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 983978901187363157}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7406199064930065475}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1316356511365814056}
     - targetCorrespondingSourceObject: {fileID: 6392886965815168175, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6646469825931954382}
@@ -882,6 +882,7 @@ MonoBehaviour:
   currentTotalDefense: 0
   baseAttack: 10
   baseDefense: 5
+  maxAttackValidationRange: 5
   equippedWeapon: {fileID: 0}
   equippedArmor: {fileID: 0}
   characterName:
@@ -1037,8 +1038,9 @@ MonoBehaviour:
   playerLocomotionManager: {fileID: 0}
   playerNetworkManager: {fileID: 0}
   playerStatsManager: {fileID: 0}
-  playerInventoryManager: {fileID: 0}
   playerEquipmentManager: {fileID: 0}
+  playerInventory: {fileID: 0}
+  playerTargetingManager: {fileID: 0}
   player: {fileID: 0}
   playerGameObject: {fileID: 0}
 --- !u!114 &3942057984574937532
@@ -1067,6 +1069,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a57a8e8e0dc57a4b92575dbb517d38c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerLocomotionManager
+  attackStaminaCost: 15
+  raycastAttackRange: 3.5
   verticalMovement: 0
   horizontalMovement: 0
   moveAmount: 0
@@ -1094,8 +1098,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7646eefc83a5fce49abaf5fe0f0153a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerAnimatorManager
-  vertical: 0
-  horizontal: 0
 --- !u!114 &4235243344170755551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,24 +1112,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerEffectsManager
   effectToTest: {fileID: 11400000, guid: f2d212c79904d1540bae290fd4d5d4df, type: 2}
   processEffect: 0
---- !u!114 &2699937301524612109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5185499262236069758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df3730a8cf36f1942b5233649c7d2360, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  currentRightHandWeapon: {fileID: 11400000, guid: 020118469dd83fe45a45d4efb17c7d01, type: 2}
-  currentLeftHandWeapon: {fileID: 11400000, guid: 020118469dd83fe45a45d4efb17c7d01, type: 2}
-  headEquipment: {fileID: 0}
-  bodyEquipment: {fileID: 0}
-  legEquipment: {fileID: 0}
-  handEquipment: {fileID: 0}
 --- !u!114 &983978901187363157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1140,15 +1124,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c184643fa0eb47a4b93c756de9cfc429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  rightHandSlot: {fileID: 0}
+  rightHandSlot: {fileID: 3193305510211992804}
   leftHandSlot: {fileID: 0}
-  rightHandWeaponModel: {fileID: 0}
-  leftHandWeaponModel: {fileID: 0}
-  unequipSword: 0
-  equipNewItems: 0
-  armaNula: {fileID: 0}
-  maleFullHelmetObject: {fileID: 7173073280711781645}
-  maleHeadFullHelmets: []
+  armorSocket: {fileID: 7623055147631009570}
 --- !u!114 &7406199064930065475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1166,10 +1144,40 @@ MonoBehaviour:
   pickupRadius: 2.5
   testSword: {fileID: 11400000, guid: e882d8bea9635df4aba459080c3e5911, type: 2}
   testPotion: {fileID: 11400000, guid: b25e85d542654444ba79b68b09e8132a, type: 2}
+  ShortSword: {fileID: 11400000, guid: 20f4fdf3cfa49114a8e927bbfc59fc74, type: 2}
   inventoryStacks: []
+--- !u!114 &1316356511365814056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185499262236069758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52ae5faa5198d1479b4452a3db617d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NC.PlayerTargetingManager
+  currentTarget: {fileID: 0}
+  lockOnIndicatorPrefab: {fileID: 8704524964814587821, guid: d6535a7c892b8a140a9c72035074410f, type: 3}
+  indicatorOffset: {x: 0, y: 2, z: 0}
+  lockOnRange: 15
+  lockOnConeAngle: 45
+  maxLockDistance: 20
+  targetableLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  lineOfSightBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!4 &5529655866117182916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
+  m_PrefabInstance: {fileID: 5420066530755654191}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7623055147631009570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6702067012661744371, guid: 5ff0b3f714c74ec43b5e73d47cccb077, type: 3}
   m_PrefabInstance: {fileID: 5420066530755654191}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &9173773159405844942 stripped

@@ -6,8 +6,8 @@ namespace NC
     {
         CharacterManager character;
 
-        public float vertical;
-        public float horizontal;
+        // public float vertical;
+        // public float horizontal;
 
         protected virtual void Awake()
         {
@@ -47,14 +47,22 @@ namespace NC
 
         public virtual void PlayTargetActionAnimationTrigger(string targetAnimation, bool isPerformingAction, bool applyRootMotion = true, bool canRotate = false, bool canMove = false)
         {
-
-            // character.applyRootMotion = applyRootMotion;
-            // character.animator.SetTrigger(targetAnimation);
-
+            character.animator.applyRootMotion = applyRootMotion;
             character.animator.CrossFade(targetAnimation, 0.2f);
 
+            character.isPerformingAction = isPerformingAction;
+            character.canRotate = canRotate;
+            character.canMove = canMove;
+        }
 
-            
+        // ADD THIS AS AN ANIMATION EVENT ON EVERY CLIP THAT SETS isPerformingAction = true
+        // (Attack, Roll, Back_Step, etc) AT THE FRAME WHERE THE PLAYER SHOULD REGAIN CONTROL.
+        // WITHOUT THIS, THE FLAGS SET ABOVE NEVER GET CLEARED AND THE PLAYER STAYS LOCKED.
+        public void AnimationEndEventCalled()
+        {
+            character.isPerformingAction = false;
+            character.canRotate = true;
+            character.canMove = true;
         }
     }
 }

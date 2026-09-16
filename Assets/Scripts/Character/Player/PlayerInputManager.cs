@@ -26,6 +26,7 @@ namespace NC
         [SerializeField] bool sprintInput;
         [SerializeField] Vector3 animatorInfo;
         [SerializeField] bool basicAttack1HInput = false;
+        [SerializeField] bool lockOnInput = false;
 
 
 
@@ -58,7 +59,7 @@ namespace NC
         private void OnSceneChange(Scene oldScene, Scene newScene)
         {
             // IF WE ARE LOADING INTO OUR WORLD SCENE, ENABLE OUR PLAYERS CONTROLS
-            if (newScene.buildIndex == WorldSaveGameManager.instance.GetWorldSceneIndex())
+            if (newScene.name == WorldSaveGameManager.instance.GetWorldSceneName())
             {
                 instance.enabled = true;
             }
@@ -81,6 +82,9 @@ namespace NC
                 playerControls.PlayerActions.Dodge.performed += i => dodgeInput = true;
                 playerControls.PlayerCombat.basicAttack1H.performed += i => basicAttack1HInput = true;
                 // playerControls.PlayerCombat.basicAttack1Hand.performed += i => basicAttack1HInput = true;
+
+                // NEW: REQUIRES A "LockOn" ACTION ADDED TO THE PlayerActions MAP IN THE INPUT ACTIONS ASSET
+                playerControls.PlayerActions.LockOn.performed += i => lockOnInput = true;
 
                 // HOLDING THE INPUT SETS THE BOOL TO TRUE
                 playerControls.PlayerActions.Sprint.performed += i => sprintInput = true;
@@ -124,6 +128,7 @@ namespace NC
             HandleDodge();
             HandleSprinting();
             HandleBasicAttack();
+            HandleLockOn();
         }
 
         // MOVEMENT
@@ -212,6 +217,19 @@ namespace NC
             {
                 basicAttack1HInput = false;
                 player.playerLocomotionManager.Handle1HBasicAttack();
+            }
+        }
+
+        private void HandleLockOn()
+        {
+            if (lockOnInput)
+            {
+                lockOnInput = false;
+
+                if (player == null)
+                    return;
+
+                player.playerTargetingManager.ToggleLockOn();
             }
         }
     }

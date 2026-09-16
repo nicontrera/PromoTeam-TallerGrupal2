@@ -26,4 +26,8 @@ public class ItemData : ScriptableObject
     [Header("Consumable Stats (Potions)")]
     public int restoreHpAmount;
     public int restoreMpAmount;
+
+    [Header("Equipped Visual")]
+    [Tooltip("Model instantiated on the player when this item is equipped - weapon in hand, or armor piece. Leave empty if this item has no visual (e.g. a potion).")]
+    public GameObject equipModelPrefab;
 }

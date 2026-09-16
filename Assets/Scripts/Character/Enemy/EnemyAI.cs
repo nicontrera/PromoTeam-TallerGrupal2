@@ -1,9 +1,17 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using NC;
 
-public class EnemyAI : NetworkBehaviour
+[System.Serializable]
+public class LootDrop
+{
+    public int itemID;
+    public int quantity = 1;
+}
+
+public class EnemyAI : CharacterManager
 {
     public enum AIState { Idle, Chasing, Attacking, Dead }
 
@@ -20,10 +28,9 @@ public class EnemyAI : NetworkBehaviour
 
     [Header("Loot Drop Hook")]
     public GameObject worldItemPrefab;
-    public int guaranteedLootID = 2;   // ID of the potion we made earlier
+    public List<LootDrop> lootTable = new List<LootDrop>();
 
     // Networked variables guarantee late-joiners see the correct HP and animation state
-    public NetworkVariable<int> currentHP = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<AIState> state = new NetworkVariable<AIState>(AIState.Idle, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     private NavMeshAgent agent;
@@ -32,9 +39,15 @@ public class EnemyAI : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
         if (IsServer)
         {
-            currentHP.Value = maxHealth;
+            // HEALTH NOW LIVES ON THE SHARED characterNetworkManager, SAME AS PLAYERS -
+            // THIS IS WHAT LETS TakeDamageEffect WORK AGAINST EITHER ONE
+            characterNetworkManager.maxHealth.Value = maxHealth;
+            characterNetworkManager.currentHealth.Value = maxHealth;
+
             agent = GetComponent<NavMeshAgent>();
             agent.speed = moveSpeed;
         }
@@ -45,8 +58,10 @@ public class EnemyAI : NetworkBehaviour
         }
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         // Clients just read 'state.Value' to play animations
         if (!IsServer || state.Value == AIState.Dead) return;
 
@@ -129,10 +144,16 @@ public class EnemyAI : NetworkBehaviour
     {
         if (state.Value == AIState.Dead) return;
 
-        currentHP.Value -= damage;
-        Debug.Log($"Goblin took {damage} damage! HP left: {currentHP.Value}");
+        // UNIFIED DAMAGE ENTRY POINT: same InstantCharacterEffect pipeline the player uses.
+        // Any future damage source (a skill, a spell, a trap) just needs to build one of these
+        // and hand it to characterEffectsManager - this works for players AND enemies alike.
+        TakeDamageEffect damageEffect = Instantiate(WorldCharacterEffectsManager.instance.takeDamageEffect);
+        damageEffect.physicalDamage = damage;
+        characterEffectsManager.ProcessInstantEffect(damageEffect);
 
-        if (currentHP.Value <= 0)
+        Debug.Log($"Goblin took {damage} damage! HP left: {characterNetworkManager.currentHealth.Value}");
+
+        if (characterNetworkManager.currentHealth.Value <= 0)
         {
             Die();
         }
@@ -141,18 +162,31 @@ public class EnemyAI : NetworkBehaviour
     private void Die()
     {
         state.Value = AIState.Dead;
-        
-        // inventory system pays out
-        Vector3 lootSpawnPos = transform.position + (Vector3.up * 0.5f);
-        GameObject droppedLoot = Instantiate(worldItemPrefab, lootSpawnPos, Quaternion.identity);
-        droppedLoot.GetComponent<NetworkObject>().Spawn();
-        
-        WorldItemInstance lootData = droppedLoot.GetComponent<WorldItemInstance>();
-        lootData.netItemID.Value = guaranteedLootID;
-        lootData.netQuantity.Value = 1;
+
+        // Pays out every entry in the loot table, not just one item
+        foreach (LootDrop drop in lootTable)
+        {
+            SpawnLootDrop(drop.itemID, drop.quantity);
+        }
 
         // Destroy the monster across the network
         // GetComponent<NetworkObject>().Despawn(true);
+    }
+
+    private void SpawnLootDrop(int itemID, int quantity)
+    {
+        if (quantity <= 0) return;
+
+        // Small random offset so multiple drops don't all land stacked in the exact same spot
+        Vector3 randomOffset = new Vector3(Random.Range(-0.4f, 0.4f), 0f, Random.Range(-0.4f, 0.4f));
+        Vector3 lootSpawnPos = transform.position + (Vector3.up * 0.5f) + randomOffset;
+
+        GameObject droppedLoot = Instantiate(worldItemPrefab, lootSpawnPos, Quaternion.identity);
+        droppedLoot.GetComponent<NetworkObject>().Spawn();
+
+        WorldItemInstance lootData = droppedLoot.GetComponent<WorldItemInstance>();
+        lootData.netItemID.Value = itemID;
+        lootData.netQuantity.Value = quantity;
     }
 
 

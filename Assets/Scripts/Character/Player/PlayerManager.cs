@@ -11,8 +11,9 @@ namespace NC
         public PlayerNetworkManager playerNetworkManager;
         public PlayerStatsManager playerStatsManager;
 
-        [HideInInspector] public PlayerInventoryManager playerInventoryManager;
         [HideInInspector] public PlayerEquipmentManager playerEquipmentManager;
+        [HideInInspector] public PlayerInventory playerInventory;
+        public PlayerTargetingManager playerTargetingManager;
 
         public PlayerNetworkManager player;
         public NetworkObject playerGameObject;
@@ -27,8 +28,9 @@ namespace NC
             playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
             playerNetworkManager = GetComponent<PlayerNetworkManager>();
             playerStatsManager = GetComponent<PlayerStatsManager>();
-            playerInventoryManager = GetComponent<PlayerInventoryManager>();
             playerEquipmentManager = GetComponent<PlayerEquipmentManager>();
+            playerInventory = GetComponent<PlayerInventory>();
+            playerTargetingManager = GetComponent<PlayerTargetingManager>();
         }
 
         protected override void Update()
@@ -102,7 +104,30 @@ namespace NC
             currentCharacterData.currentStamina = playerNetworkManager.currentStamina.Value;
 
             currentCharacterData.vitality = playerNetworkManager.vitality.Value; 
-            currentCharacterData.endurance = playerNetworkManager.endurance.Value; 
+            currentCharacterData.endurance = playerNetworkManager.endurance.Value;
+
+            // PROGRESSION
+            currentCharacterData.playerLevel = playerNetworkManager.playerLevel.Value;
+            currentCharacterData.playerExp = playerNetworkManager.playerExp.Value;
+            currentCharacterData.expRequiredForNextLevel = playerNetworkManager.expRequiredForNextLevel.Value;
+
+            // EQUIPPED GEAR
+            currentCharacterData.equippedWeaponID = playerNetworkManager.netWeaponID.Value;
+            currentCharacterData.equippedArmorID = playerNetworkManager.netArmorID.Value;
+
+            // INVENTORY
+            currentCharacterData.inventoryItems.Clear();
+            if (playerInventory != null)
+            {
+                foreach (ItemStack stack in playerInventory.inventoryStacks)
+                {
+                    currentCharacterData.inventoryItems.Add(new InventoryItemSaveData
+                    {
+                        itemID = stack.item.itemID,
+                        quantity = stack.quantity
+                    });
+                }
+            }
         }
 
         public void LoadGameDataFromCurrentCharacterData(ref CharacterSaveData currentCharacterData)
@@ -122,6 +147,32 @@ namespace NC
             playerNetworkManager.currentHealth.Value = currentCharacterData.currentHealth;
             playerNetworkManager.currentStamina.Value = currentCharacterData.currentStamina;
             PlayerUIManager.instance.playerUIHudManager.SetMaxStaminaValue(playerNetworkManager.maxStamina.Value);
+
+            // PROGRESSION
+            playerNetworkManager.playerLevel.Value = currentCharacterData.playerLevel;
+            playerNetworkManager.playerExp.Value = currentCharacterData.playerExp;
+            playerNetworkManager.expRequiredForNextLevel.Value = currentCharacterData.expRequiredForNextLevel;
+
+            // INVENTORY - restored before gear, so the equip lookups below have items to find
+            if (playerInventory != null)
+            {
+                playerInventory.inventoryStacks.Clear();
+                foreach (InventoryItemSaveData savedItem in currentCharacterData.inventoryItems)
+                {
+                    ItemData item = ItemDatabase.GetItemByID(savedItem.itemID);
+                    if (item != null)
+                    {
+                        playerInventory.inventoryStacks.Add(new ItemStack(item, savedItem.quantity));
+                    }
+                }
+            }
+
+            // EQUIPPED GEAR - routed through the existing ServerRpcs rather than writing netWeaponID/netArmorID
+            // directly, since those NetworkVariables are Server-write-only and this method can also run on a
+            // joining client loading their own save; the RPC call is safe from either host or client context,
+            // and re-triggers TranslateIDToGear so the weapon/armor visuals and stats load correctly too.
+            playerNetworkManager.RequestEquipWeaponServerRpc(currentCharacterData.equippedWeaponID);
+            playerNetworkManager.RequestEquipArmorServerRpc(currentCharacterData.equippedArmorID);
         }
 
         public void CheckForLevelUpOk(int expGained, ulong playerId)

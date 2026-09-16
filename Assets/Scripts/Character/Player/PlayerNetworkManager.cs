@@ -14,6 +14,7 @@ namespace NC
 
         public int baseAttack = 10;
         public int baseDefense = 5;
+        [SerializeField] float maxAttackValidationRange = 5f; // Slightly more lenient than the client's own range check, to allow for latency
         public ItemData equippedWeapon;
         public ItemData equippedArmor;
         public NetworkVariable<FixedString64Bytes> characterName = new NetworkVariable<FixedString64Bytes>("Character", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -43,6 +44,13 @@ namespace NC
             netWeaponID.OnValueChanged += (oldID, newID) => TranslateIDToGear(newID, true);
             netArmorID.OnValueChanged  += (oldID, newID) => TranslateIDToGear(newID, false);
 
+            // FIX: OnValueChanged only fires on a CHANGE, not on the value that's already there.
+            // Apply whatever gear is already equipped right now, so late-joining clients
+            // (and this client on its own spawn) actually see/carry the current gear
+            // instead of waiting for the next time someone re-equips something.
+            TranslateIDToGear(netWeaponID.Value, true);
+            TranslateIDToGear(netArmorID.Value, false);
+
             // Force the math to run Frame 1 so we start at 10, not 0!
             UpdateInspectorDisplay();
         }
@@ -51,20 +59,33 @@ namespace NC
         {
             if (itemID == -1) // Player unequipped it
             {
-                if (isWeapon) equippedWeapon = null;
-                else equippedArmor = null;
-                // return;
+                if (isWeapon)
+                {
+                    equippedWeapon = null;
+                    player.playerEquipmentManager.UnloadWeaponVisual();
+                }
+                else
+                {
+                    equippedArmor = null;
+                    player.playerEquipmentManager.UnloadArmorVisual();
+                }
             }
             else
             {
                 ItemData item = ItemDatabase.GetItemByID(itemID);
-                if (isWeapon) equippedWeapon = item;
-                else equippedArmor = item;
+
+                if (isWeapon)
+                {
+                    equippedWeapon = item;
+                    player.playerEquipmentManager.LoadWeaponVisual(item);
+                }
+                else
+                {
+                    equippedArmor = item;
+                    player.playerEquipmentManager.LoadArmorVisual(item);
+                }
             }
 
-            // // 2. NEW: Update the visual variables so you can see them in the Unity Inspector!
-            // currentTotalAttack = GetTotalAttack();
-            // currentTotalDefense = GetTotalDefense();
             UpdateInspectorDisplay();
         }
 
@@ -163,13 +184,21 @@ namespace NC
 
             if (existsInLedger && hasEnemyScript && goblin != null)
             {
+                // SERVER-SIDE RANGE CHECK: DON'T TRUST THE CLIENT'S OWN AIM/DISTANCE JUDGEMENT
+                float distanceToTarget = Vector3.Distance(transform.position, goblin.transform.position);
+                if (distanceToTarget > maxAttackValidationRange)
+                {
+                    Debug.LogWarning($"[SERVER] Rejected hit on {netObj.name} - target out of range ({distanceToTarget:F1}m).");
+                    return;
+                }
+
                 Debug.Log($"[SERVER] Authorized hit on {netObj.name} for {damageToDeal} damage.");
                 
                 // Trigger the Goblin's native damage RPC
                 goblin.TakeDamageServerRpc(damageToDeal);
 
-                // Check if the Goblin's NetworkVariable HP dropped to zero
-                if (goblin.currentHP.Value <= 0)
+                // Check if the Goblin's health dropped to zero
+                if (goblin.characterNetworkManager.currentHealth.Value <= 0)
                 {
                     player.CheckForLevelUpOk(30, sourceClientId);
                 }

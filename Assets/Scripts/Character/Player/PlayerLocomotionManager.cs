@@ -98,11 +98,25 @@ namespace NC
         {
             if (!playerManager.canRotate)
                 return;
+
             targetRotationDirection = Vector3.zero;
-            targetRotationDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
-            targetRotationDirection = targetRotationDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
-            targetRotationDirection.Normalize();
-            targetRotationDirection.y = 0;
+
+            CharacterManager lockedTarget = playerManager.playerTargetingManager != null ? playerManager.playerTargetingManager.currentTarget : null;
+
+            if (lockedTarget != null)
+            {
+                // HYBRID COMBAT: WHILE LOCKED ON, ALWAYS FACE THE TARGET INSTEAD OF THE CAMERA
+                targetRotationDirection = lockedTarget.transform.position - transform.position;
+                targetRotationDirection.y = 0;
+                targetRotationDirection.Normalize();
+            }
+            else
+            {
+                targetRotationDirection = PlayerCamera.instance.cameraObject.transform.forward * verticalMovement;
+                targetRotationDirection = targetRotationDirection + PlayerCamera.instance.cameraObject.transform.right * horizontalMovement;
+                targetRotationDirection.Normalize();
+                targetRotationDirection.y = 0;
+            }
 
             if (targetRotationDirection == Vector3.zero)
             {
@@ -278,17 +292,28 @@ namespace NC
             // 3. Grab the live inventory damage (Base Attack + Weapon Bonus)
             int finalAttackDamage = playerManager.playerNetworkManager.GetTotalAttack();
 
-            // 4. Perform the Screen-Center Raycast from the Camera perspective
+            CharacterManager lockedTarget = playerManager.playerTargetingManager != null ? playerManager.playerTargetingManager.currentTarget : null;
+
+            // HYBRID COMBAT: IF A TARGET IS LOCKED, ATTACK IT DIRECTLY - NO CAMERA AIM NEEDED
+            if (lockedTarget != null)
+            {
+                float distanceToTarget = Vector3.Distance(transform.position, lockedTarget.transform.position);
+
+                if (distanceToTarget <= raycastAttackRange && lockedTarget.TryGetComponent(out NetworkObject lockedNetObj))
+                {
+                    playerManager.playerNetworkManager.NotifyAttackHitServerRpc(lockedNetObj.NetworkObjectId, finalAttackDamage, thisPlayerId);
+                }
+
+                return;
+            }
+
+            // FREE-AIM FALLBACK: NO TARGET LOCKED, PERFORM THE SCREEN-CENTER RAYCAST FROM THE CAMERA
             Transform camTransform = PlayerCamera.instance.transform;
             if (Physics.Raycast(camTransform.position, camTransform.forward, out RaycastHit hit, raycastAttackRange, enemyLayers))
             {
-                Debug.Log($"Laser aimed successfully! Hit collider: {hit.collider.name}");
-
                 if (hit.collider.TryGetComponent(out NetworkObject enemyNetObj))
                 {
                     // Radio the Server to confirm the hit and apply damage globally!
-                    Debug.Log($"TESTING 1ST IF");
-
                     playerManager.playerNetworkManager.NotifyAttackHitServerRpc(enemyNetObj.NetworkObjectId, finalAttackDamage, thisPlayerId);
                 }
             }

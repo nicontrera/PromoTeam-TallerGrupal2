@@ -13,6 +13,7 @@ public class PlayerInventory : NetworkBehaviour
     [Header("Debug Testing")]
     public ItemData testSword;
     public ItemData testPotion;
+    public ItemData ShortSword;
 
 
     public event System.Action OnInventoryChanged;
@@ -242,7 +243,8 @@ public class PlayerInventory : NetworkBehaviour
             UnityEngine.InputSystem.Keyboard.current.tKey.wasPressedThisFrame)
         {
             if (testSword != null) AddItem(testSword, 1);
-            if (testPotion != null) AddItem(testPotion, 5); 
+            if (ShortSword != null) AddItem(ShortSword, 1);
+            if (testPotion != null) AddItem(testPotion, 5);
             
             Debug.Log("Cheat activated: Added Test Items!");
         }

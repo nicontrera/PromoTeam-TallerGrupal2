@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b8364f136f430d4ba9d0ae1a9e07561, type: 3}
   m_Name: testSword
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 3
+  itemID: 1
   itemName: testSword
   type: 1
   icon: {fileID: 21300000, guid: c510b3a6afe881e4e9b64cef019d3120, type: 3}
@@ -24,3 +24,4 @@ MonoBehaviour:
   maxMpBonus: 0
   restoreHpAmount: 0
   restoreMpAmount: 0
+  equipModelPrefab: {fileID: 3124093613094154145, guid: 584bfadf99d97bb429afc22835cf8036, type: 3}

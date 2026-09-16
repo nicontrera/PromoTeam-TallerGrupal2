@@ -44,12 +44,22 @@ namespace NC
 
         public void StartAsHost()
         {
-            Debug.Log("STARTING AS HOST");
+            StartAsHost(WorldSaveGameManager.instance.GetWorldSceneName());
+        }
+
+        // BIND A BUTTON'S OnClick() DIRECTLY TO THIS OVERLOAD WITH A SPECIFIC SCENE NAME
+        // TO GET A "START HOST - [SCENE]" BUTTON WITHOUT WRITING ANY NEW CODE
+        public void StartAsHost(string sceneName)
+        {
+            Debug.Log("STARTING AS HOST - SCENE: " + sceneName);
+            WorldSaveGameManager.instance.SetWorldSceneName(sceneName);
             NetworkManager.Singleton.StartHost();
             WorldSaveGameManager.instance.AttemptToCreateNewGame(true);
         }
         public void StartAsClient()
         {
+            // CLIENTS DON'T CHOOSE THE SCENE - NETCODE AUTOMATICALLY SYNCS THEM
+            // TO WHATEVER SCENE THE HOST HAS ALREADY LOADED
             Debug.Log("STARTING AS CLIENT");
             NetworkManager.Singleton.StartClient();
             WorldSaveGameManager.instance.AttemptToCreateNewGame(false);

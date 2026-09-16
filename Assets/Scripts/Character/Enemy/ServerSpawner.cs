@@ -4,7 +4,7 @@ using UnityEngine;
 public class ServerSpawner : NetworkBehaviour
 {
     public GameObject monsterPrefab; // Drag your Goblin PREFAB here in the Inspector!
-
+    public GameObject monsterPrefab2;
     public override void OnNetworkSpawn()
     {
         // Only the server is legally allowed to birth physical matter
@@ -21,5 +21,11 @@ public class ServerSpawner : NetworkBehaviour
         // This is the sacred Netcode command that forces the engine to register the object, 
         // assign it a NetworkInstanceId, and broadcast its existence to all connected PCs:
         spawnedMonster.GetComponent<NetworkObject>().Spawn();
+
+        GameObject spawnedMonster2 = Instantiate(monsterPrefab2);
+        
+        // This is the sacred Netcode command that forces the engine to register the object, 
+        // assign it a NetworkInstanceId, and broadcast its existence to all connected PCs:
+        spawnedMonster2.GetComponent<NetworkObject>().Spawn();
     }
 }

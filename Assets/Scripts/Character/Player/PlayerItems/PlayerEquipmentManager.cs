@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace NC
 {
@@ -9,22 +6,17 @@ namespace NC
     {
         PlayerManager player;
 
+        [Header("Weapon Socket")]
         public WeaponModelInstantiationSlot rightHandSlot;
-        public WeaponModelInstantiationSlot leftHandSlot;
+        public WeaponModelInstantiationSlot leftHandSlot; // Not used yet - single weapon slot for now, matches PlayerNetworkManager.equippedWeapon
 
-        public GameObject rightHandWeaponModel;
-        public GameObject leftHandWeaponModel;
+        private GameObject rightHandWeaponModel;
 
-        public bool unequipSword = false;
+        [Header("Armor Socket")]
+        [Tooltip("Where armor visuals attach - e.g. an empty Transform on the character's head or chest bone.")]
+        public Transform armorSocket;
 
-        [Header("Debug delete later")]
-        [SerializeField] bool equipNewItems;
-        public WeaponItem armaNula;
-
-        [Header("Male Equipment Models")]
-        public GameObject maleFullHelmetObject;
-        public GameObject[] maleHeadFullHelmets;
-
+        private GameObject currentArmorModel;
 
         protected override void Awake()
         {
@@ -32,80 +24,6 @@ namespace NC
             player = GetComponent<PlayerManager>();
 
             InitializeWeaponSlots();
-
-            List<GameObject> maleFullHelmetsList = new List<GameObject>();
-
-            foreach (Transform child in maleFullHelmetObject.transform)
-            {
-                maleFullHelmetsList.Add(child.gameObject);
-            }
-
-            maleHeadFullHelmets = maleFullHelmetsList.ToArray();
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            
-            LoadWeaponsOnBothHands();
-        }
-
-        void Update()
-        {
-            if (Keyboard.current[Key.Digit1].wasPressedThisFrame)
-            {
-                Debug.Log("key 1 to unnequip");
-                rightHandSlot.UnloadWeapon();
-            }
-            if (Keyboard.current[Key.Digit2].wasPressedThisFrame)
-            {
-                Debug.Log("key 2 to equip");
-                LoadRightWeapon();
-            }
-
-            if(equipNewItems)
-            {
-                equipNewItems = false;
-                DebugEquipNewItems();
-            }
-        }
-
-        private void DebugEquipNewItems()
-        {
-            Debug.Log("EQUIPPING NEW ITEMS");
-            // if(player.playerInventoryManager.headEquipment != null)
-            // {
-            //     LoadHeadEquipment(player.playerInventoryManager.headEquipment);
-            // }
-            LoadHeadEquipment(player.playerInventoryManager.headEquipment);
-        }
-
-        private void LoadHeadEquipment(HeadEquipmentItem equipment)
-        {
-            UnloadHeadEquipmentModels();
-
-            if (equipment == null)
-            {
-                player.playerInventoryManager.headEquipment = null;
-                return;
-            }
-
-            player.playerInventoryManager.headEquipment = equipment;
-
-            foreach (var model in equipment.equipmentModels)
-            {
-                model.LoadModel(player, true);
-            }
-        }
-
-        private void UnloadHeadEquipmentModels()
-        {
-            foreach (var model in maleHeadFullHelmets)
-            {
-                model.SetActive(false);
-            }
-
-
         }
 
         private void InitializeWeaponSlots()
@@ -125,27 +43,47 @@ namespace NC
             }
         }
 
-        public void LoadWeaponsOnBothHands()
+        // CALLED BY PlayerNetworkManager.TranslateIDToGear WHENEVER netWeaponID CHANGES
+        // (INCLUDING ON SPAWN, SO LATE JOINERS AND YOU YOURSELF SEE CURRENT GEAR IMMEDIATELY)
+        public void LoadWeaponVisual(ItemData weapon)
         {
-            LoadRightWeapon();
-            LoadLeftWeapon();
+            UnloadWeaponVisual();
+
+            if (weapon == null || weapon.equipModelPrefab == null || rightHandSlot == null)
+                return;
+
+            rightHandWeaponModel = Instantiate(weapon.equipModelPrefab);
+            rightHandSlot.LoadWeapon(rightHandWeaponModel);
         }
 
-        public void LoadRightWeapon()
+        public void UnloadWeaponVisual()
         {
-            if (player.playerInventoryManager.currentRightHandWeapon != null)
-            {
-                rightHandWeaponModel = Instantiate(player.playerInventoryManager.currentRightHandWeapon.weaponModel);
-                rightHandSlot.LoadWeapon(rightHandWeaponModel);
-            }
+            if (rightHandSlot != null)
+                rightHandSlot.UnloadWeapon();
+
+            rightHandWeaponModel = null;
         }
 
-        public void LoadLeftWeapon()
+        // CALLED BY PlayerNetworkManager.TranslateIDToGear WHENEVER netArmorID CHANGES
+        public void LoadArmorVisual(ItemData armor)
         {
-            if (player.playerInventoryManager.currentLeftHandWeapon != null)
+            UnloadArmorVisual();
+
+            if (armor == null || armor.equipModelPrefab == null || armorSocket == null)
+                return;
+
+            currentArmorModel = Instantiate(armor.equipModelPrefab, armorSocket);
+            currentArmorModel.transform.localPosition = Vector3.zero;
+            currentArmorModel.transform.localRotation = Quaternion.identity;
+            currentArmorModel.transform.localScale = Vector3.one;
+        }
+
+        public void UnloadArmorVisual()
+        {
+            if (currentArmorModel != null)
             {
-                leftHandWeaponModel = Instantiate(player.playerInventoryManager.currentLeftHandWeapon.weaponModel);
-                leftHandSlot.LoadWeapon(leftHandWeaponModel);
+                Destroy(currentArmorModel);
+                currentArmorModel = null;
             }
         }
     }
